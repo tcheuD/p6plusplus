@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,106 +17,40 @@ class Comment
     private $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="comment")
-     */
-    private $author;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Trick", mappedBy="comment")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="comments")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $commentDate;
 
     /**
      * @ORM\Column(type="text")
      */
     private $comment;
 
-    public function __construct()
-    {
-        $this->author = new ArrayCollection();
-        $this->trick = new ArrayCollection();
-    }
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $commentDate;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getAuthor(): Collection
-    {
-        return $this->author;
-    }
-
-    public function addAuthor(User $author): self
-    {
-        if (!$this->author->contains($author)) {
-            $this->author[] = $author;
-            $author->setComment($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAuthor(User $author): self
-    {
-        if ($this->author->contains($author)) {
-            $this->author->removeElement($author);
-            // set the owning side to null (unless already changed)
-            if ($author->getComment() === $this) {
-                $author->setComment(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Trick[]
-     */
-    public function getTrick(): Collection
+    public function getTrick(): ?Trick
     {
         return $this->trick;
     }
 
-    public function addTrick(Trick $trick): self
+    public function setTrick(?Trick $trick): self
     {
-        if (!$this->trick->contains($trick)) {
-            $this->trick[] = $trick;
-            $trick->setComment($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTrick(Trick $trick): self
-    {
-        if ($this->trick->contains($trick)) {
-            $this->trick->removeElement($trick);
-            // set the owning side to null (unless already changed)
-            if ($trick->getComment() === $this) {
-                $trick->setComment(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getCommentDate(): ?\DateTimeInterface
-    {
-        return $this->commentDate;
-    }
-
-    public function setCommentDate(\DateTimeInterface $commentDate): self
-    {
-        $this->commentDate = $commentDate;
+        $this->trick = $trick;
 
         return $this;
     }
@@ -131,6 +63,30 @@ class Comment
     public function setComment(string $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCommentDate(): ?\DateTimeInterface
+    {
+        return $this->commentDate;
+    }
+
+    public function setCommentDate(\DateTimeInterface $commentDate): self
+    {
+        $this->commentDate = $commentDate;
 
         return $this;
     }

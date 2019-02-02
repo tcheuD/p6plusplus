@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,12 +24,12 @@ class Video
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $platform;
+    private $url;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="video")
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $author;
+    private $platform;
 
     /**
      * @ORM\Column(type="datetime")
@@ -39,15 +37,16 @@ class Video
     private $creationDate;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Trick", mappedBy="video")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="videos")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
 
-    public function __construct()
-    {
-        $this->author = new ArrayCollection();
-        $this->trick = new ArrayCollection();
-    }
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="videos")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $author;
 
     public function getId(): ?int
     {
@@ -66,45 +65,26 @@ class Video
         return $this;
     }
 
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string $url): self
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
     public function getPlatform(): ?string
     {
         return $this->platform;
     }
 
-    public function setPlatform(string $platform): self
+    public function setPlatform(?string $platform): self
     {
         $this->platform = $platform;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|User[]
-     */
-    public function getAuthor(): Collection
-    {
-        return $this->author;
-    }
-
-    public function addAuthor(User $author): self
-    {
-        if (!$this->author->contains($author)) {
-            $this->author[] = $author;
-            $author->setVideo($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAuthor(User $author): self
-    {
-        if ($this->author->contains($author)) {
-            $this->author->removeElement($author);
-            // set the owning side to null (unless already changed)
-            if ($author->getVideo() === $this) {
-                $author->setVideo(null);
-            }
-        }
 
         return $this;
     }
@@ -121,33 +101,26 @@ class Video
         return $this;
     }
 
-    /**
-     * @return Collection|Trick[]
-     */
-    public function getTrick(): Collection
+    public function getTrick(): ?Trick
     {
         return $this->trick;
     }
 
-    public function addTrick(Trick $trick): self
+    public function setTrick(?Trick $trick): self
     {
-        if (!$this->trick->contains($trick)) {
-            $this->trick[] = $trick;
-            $trick->setVideo($this);
-        }
+        $this->trick = $trick;
 
         return $this;
     }
 
-    public function removeTrick(Trick $trick): self
+    public function getAuthor(): ?User
     {
-        if ($this->trick->contains($trick)) {
-            $this->trick->removeElement($trick);
-            // set the owning side to null (unless already changed)
-            if ($trick->getVideo() === $this) {
-                $trick->setVideo(null);
-            }
-        }
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }
