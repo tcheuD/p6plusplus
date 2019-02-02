@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,25 +27,21 @@ class Picture
     private $url;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Trick", mappedBy="picture")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="pictures")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="picture")
-     */
-    private $author;
 
     /**
      * @ORM\Column(type="datetime")
      */
     private $creationDate;
 
-    public function __construct()
-    {
-        $this->trick = new ArrayCollection();
-        $this->author = new ArrayCollection();
-    }
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="pictures")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $author;
 
     public function getId(): ?int
     {
@@ -78,64 +72,14 @@ class Picture
         return $this;
     }
 
-    /**
-     * @return Collection|Trick[]
-     */
-    public function getTrick(): Collection
+    public function getTrick(): ?Trick
     {
         return $this->trick;
     }
 
-    public function addTrick(Trick $trick): self
+    public function setTrick(?Trick $trick): self
     {
-        if (!$this->trick->contains($trick)) {
-            $this->trick[] = $trick;
-            $trick->setPicture($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTrick(Trick $trick): self
-    {
-        if ($this->trick->contains($trick)) {
-            $this->trick->removeElement($trick);
-            // set the owning side to null (unless already changed)
-            if ($trick->getPicture() === $this) {
-                $trick->setPicture(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|User[]
-     */
-    public function getAuthor(): Collection
-    {
-        return $this->author;
-    }
-
-    public function addAuthor(User $author): self
-    {
-        if (!$this->author->contains($author)) {
-            $this->author[] = $author;
-            $author->setPicture($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAuthor(User $author): self
-    {
-        if ($this->author->contains($author)) {
-            $this->author->removeElement($author);
-            // set the owning side to null (unless already changed)
-            if ($author->getPicture() === $this) {
-                $author->setPicture(null);
-            }
-        }
+        $this->trick = $trick;
 
         return $this;
     }
@@ -148,6 +92,18 @@ class Picture
     public function setCreationDate(\DateTimeInterface $creationDate): self
     {
         $this->creationDate = $creationDate;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

@@ -19,7 +19,7 @@ class Trick
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=100)
      */
     private $title;
 
@@ -29,9 +29,14 @@ class Trick
     private $content;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="trick")
+     * @ORM\Column(type="string", length=100)
      */
-    private $createdBy;
+    private $category;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick")
+     */
+    private $comments;
 
     /**
      * @ORM\Column(type="datetime")
@@ -39,39 +44,36 @@ class Trick
     private $creationDate;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="updatedTrick")
-     */
-    private $updatedBy;
-
-    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $modificationDate;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\OneToMany(targetEntity="App\Entity\Picture", mappedBy="trick")
      */
-    private $category;
+    private $pictures;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="trick")
+     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="trick")
      */
-    private $comment;
+    private $videos;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Picture", inversedBy="trick")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tricks")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $picture;
+    private $createdBy;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Video", inversedBy="trick")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tricks_update")
      */
-    private $video;
+    private $updatedBy;
 
     public function __construct()
     {
-        $this->createdBy = new ArrayCollection();
-        $this->updatedBy = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -103,31 +105,43 @@ class Trick
         return $this;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getCreatedBy(): Collection
+    public function getCategory(): ?string
     {
-        return $this->createdBy;
+        return $this->category;
     }
 
-    public function addCreatedBy(User $createdBy): self
+    public function setCategory(string $category): self
     {
-        if (!$this->createdBy->contains($createdBy)) {
-            $this->createdBy[] = $createdBy;
-            $createdBy->setTrick($this);
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setTrick($this);
         }
 
         return $this;
     }
 
-    public function removeCreatedBy(User $createdBy): self
+    public function removeComment(Comment $comment): self
     {
-        if ($this->createdBy->contains($createdBy)) {
-            $this->createdBy->removeElement($createdBy);
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
             // set the owning side to null (unless already changed)
-            if ($createdBy->getTrick() === $this) {
-                $createdBy->setTrick(null);
+            if ($comment->getTrick() === $this) {
+                $comment->setTrick(null);
             }
         }
 
@@ -146,37 +160,6 @@ class Trick
         return $this;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getUpdatedBy(): Collection
-    {
-        return $this->updatedBy;
-    }
-
-    public function addUpdatedBy(User $updatedBy): self
-    {
-        if (!$this->updatedBy->contains($updatedBy)) {
-            $this->updatedBy[] = $updatedBy;
-            $updatedBy->setUpdatedTrick($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUpdatedBy(User $updatedBy): self
-    {
-        if ($this->updatedBy->contains($updatedBy)) {
-            $this->updatedBy->removeElement($updatedBy);
-            // set the owning side to null (unless already changed)
-            if ($updatedBy->getUpdatedTrick() === $this) {
-                $updatedBy->setUpdatedTrick(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getModificationDate(): ?\DateTimeInterface
     {
         return $this->modificationDate;
@@ -189,50 +172,88 @@ class Trick
         return $this;
     }
 
-    public function getCategory(): ?string
+    /**
+     * @return Collection|Picture[]
+     */
+    public function getPictures(): Collection
     {
-        return $this->category;
+        return $this->pictures;
     }
 
-    public function setCategory(string $category): self
+    public function addPicture(Picture $picture): self
     {
-        $this->category = $category;
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures[] = $picture;
+            $picture->setTrick($this);
+        }
 
         return $this;
     }
 
-    public function getComment(): ?Comment
+    public function removePicture(Picture $picture): self
     {
-        return $this->comment;
-    }
-
-    public function setComment(?Comment $comment): self
-    {
-        $this->comment = $comment;
+        if ($this->pictures->contains($picture)) {
+            $this->pictures->removeElement($picture);
+            // set the owning side to null (unless already changed)
+            if ($picture->getTrick() === $this) {
+                $picture->setTrick(null);
+            }
+        }
 
         return $this;
     }
 
-    public function getPicture(): ?Picture
+    /**
+     * @return Collection|Video[]
+     */
+    public function getVideos(): Collection
     {
-        return $this->picture;
+        return $this->videos;
     }
 
-    public function setPicture(?Picture $picture): self
+    public function addVideo(Video $video): self
     {
-        $this->picture = $picture;
+        if (!$this->videos->contains($video)) {
+            $this->videos[] = $video;
+            $video->setTrick($this);
+        }
 
         return $this;
     }
 
-    public function getVideo(): ?Video
+    public function removeVideo(Video $video): self
     {
-        return $this->video;
+        if ($this->videos->contains($video)) {
+            $this->videos->removeElement($video);
+            // set the owning side to null (unless already changed)
+            if ($video->getTrick() === $this) {
+                $video->setTrick(null);
+            }
+        }
+
+        return $this;
     }
 
-    public function setVideo(?Video $video): self
+    public function getCreatedBy(): ?User
     {
-        $this->video = $video;
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?User
+    {
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(?User $updatedBy): self
+    {
+        $this->updatedBy = $updatedBy;
 
         return $this;
     }

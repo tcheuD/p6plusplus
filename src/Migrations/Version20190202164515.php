@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190129150114 extends AbstractMigration
+final class Version20190202164515 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,7 +22,8 @@ final class Version20190129150114 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE user ADD username VARCHAR(50) NOT NULL, ADD password VARCHAR(255) NOT NULL, ADD email VARCHAR(255) NOT NULL, ADD registration_date DATETIME NOT NULL, ADD agreedterms_at DATETIME DEFAULT NULL, ADD forgot_pass_identity VARCHAR(255) NOT NULL, ADD roles VARCHAR(255) NOT NULL');
+        $this->addSql('CREATE TABLE picture (id INT AUTO_INCREMENT NOT NULL, trick_id INT NOT NULL, number INT NOT NULL, url VARCHAR(255) NOT NULL, creation_date DATETIME NOT NULL, INDEX IDX_16DB4F89B281BE2E (trick_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE picture ADD CONSTRAINT FK_16DB4F89B281BE2E FOREIGN KEY (trick_id) REFERENCES trick (id)');
     }
 
     public function down(Schema $schema) : void
@@ -30,6 +31,6 @@ final class Version20190129150114 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE user DROP username, DROP password, DROP email, DROP registration_date, DROP agreedterms_at, DROP forgot_pass_identity, DROP roles');
+        $this->addSql('DROP TABLE picture');
     }
 }
