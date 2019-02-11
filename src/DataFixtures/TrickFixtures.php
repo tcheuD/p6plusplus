@@ -26,11 +26,13 @@ class TrickFixtures extends BaseFixture implements DependentFixtureInterface
     {
         $this->createMany(10, 'trick', function ($i) {
             $trick = new Trick();
-            $trick->setTitle($this->faker->randomElement(self::$titles))
+            $title = self::$titles[$i];
+            $trick->setTitle($title)
                 ->setCreationDate($this->faker->dateTimeBetween('-100 days', '-1 days'))
                 ->setCategory('snow')
                 ->setCreatedBy($this->getRandomReference('user'))
-                ->setContent($this->faker->realText());
+                ->setContent($this->faker->realText())
+                ->setSlug(strtolower(str_replace(' ', '-', $title)));
 
             return $trick;
         });
