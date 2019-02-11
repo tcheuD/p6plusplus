@@ -48,6 +48,11 @@ class Video
      */
     private $author;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $identif;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +126,18 @@ class Video
     public function setAuthor(?User $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getIdentif(): ?string
+    {
+        return $this->identif;
+    }
+
+    public function setIdentif(string $identif): self
+    {
+        $this->identif = $identif;
 
         return $this;
     }
