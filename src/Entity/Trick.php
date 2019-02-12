@@ -5,9 +5,11 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
+ * @UniqueEntity("title")
  */
 class Trick
 {
@@ -19,7 +21,7 @@ class Trick
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(name="title", type="string", length=100, unique=true)
      */
     private $title;
 
@@ -68,6 +70,11 @@ class Trick
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tricks_update")
      */
     private $updatedBy;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $slug;
 
     public function __construct()
     {
@@ -254,6 +261,18 @@ class Trick
     public function setUpdatedBy(?User $updatedBy): self
     {
         $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

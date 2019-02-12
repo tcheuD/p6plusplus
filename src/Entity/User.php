@@ -21,7 +21,7 @@ class User
     /**
      * @ORM\Column(type="string", length=50)
      */
-    private $username;
+    private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -68,6 +68,16 @@ class User
      */
     private $registrationDate;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $picture;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -82,14 +92,14 @@ class User
         return $this->id;
     }
 
-    public function getUsername(): ?string
+    public function getFirstname(): ?string
     {
-        return $this->username;
+        return $this->firstname;
     }
 
-    public function setUsername(string $username): self
+    public function setFirstname(string $firstname): self
     {
-        $this->username = $username;
+        $this->firstname = $firstname;
 
         return $this;
     }
@@ -293,6 +303,30 @@ class User
     public function setRegistrationDate(\DateTimeInterface $registrationDate): self
     {
         $this->registrationDate = $registrationDate;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }

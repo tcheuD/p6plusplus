@@ -1,0 +1,26 @@
+<h1>{{ trick.title }}</h1>
+<div>
+    {{ trick.content}}
+    <em>{{ trick.category }}</em>
+</div>
+{% for picture in trick.pictures %}
+    <img style="width:25%" src="{{ asset(picture.imagePath) }}" alt="">
+{% endfor %}
+
+<div>
+    {% for video in trick.videos %}
+        <iframe width="640" height="360"
+                src="http://www.youtube.com/embed/{{ video.identif }}?autoplay=0"
+                frameborder="0"></iframe>
+    {% endfor %}
+</div>
+
+<h3>Commentaires : </h3>
+
+{% for comment in trick.comments %}
+    <p>Par: {{ comment.user.firstname }} {{ comment.user.name }} le {{ comment.commentDate|date('Y-m-d') }}</p>
+    {{ comment.user.picture }}
+    <p>{{ comment.comment }}</p>
+{% endfor %}
+
+{% include 'pagination.html.twig' %}

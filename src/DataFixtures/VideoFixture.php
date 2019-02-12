@@ -24,13 +24,19 @@ class VideoFixture extends BaseFixture implements DependentFixtureInterface
 
     public function loadData(ObjectManager $manager)
     {
-        $this->createMany(10, 'video', function ($i) {
+        $this->createMany(30, 'video', function ($i) {
+            $videoUrl = $this->faker->randomElement(self::$url);
+
+            preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $videoUrl, $match);
+
+
             $video = new Video();
             $video->setTrick($this->getRandomReference('trick'));
             $video->setCreationDate($this->faker->dateTimeBetween('-100 days', '-1 days'));
             $video->setAuthor($this->getRandomReference('user'));
             $video->setNumber(1);
-            $video->setUrl($this->faker->randomElement(self::$url));
+            $video->setUrl($videoUrl);
+            $video->setIdentif($match[1]);
             $video->setPlatform('youtube');
 
             return $video;
