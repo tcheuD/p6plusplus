@@ -24,7 +24,7 @@ class PictureFixture extends BaseFixture implements DependentFixtureInterface
 
     public function loadData(ObjectManager $manager)
     {
-        $this->createMany(10, 'picture', function ($i) {
+        $this->createMany(30, 'picture', function ($i) {
             $picture = new Picture();
             $picture->setUrl($this->faker->randomElement(self::$url));
             $picture->setNumber(1);

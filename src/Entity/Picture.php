@@ -65,6 +65,11 @@ class Picture
         return $this->url;
     }
 
+    public function getImagePath()
+    {
+        return 'images/'.$this->getUrl();
+    }
+
     public function setUrl(string $url): self
     {
         $this->url = $url;
