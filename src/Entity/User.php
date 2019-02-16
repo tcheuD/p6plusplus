@@ -2,14 +2,13 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
@@ -19,49 +18,24 @@ class User
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $firstname;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $password;
-
-    /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
 
     /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
-    private $forgotPassIdentity;
+    private $Firstname;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user")
+     * @ORM\Column(type="string", length=255)
      */
-    private $comments;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="author")
-     */
-    private $videos;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Picture", mappedBy="author")
-     */
-    private $pictures;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Trick", mappedBy="createdBy")
-     */
-    private $tricks;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Trick", mappedBy="updatedBy")
-     */
-    private $tricks_update;
+    private $Name;
 
     /**
      * @ORM\Column(type="datetime")
@@ -71,49 +45,16 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $Picture;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $picture;
-
-    public function __construct()
-    {
-        $this->comments = new ArrayCollection();
-        $this->videos = new ArrayCollection();
-        $this->pictures = new ArrayCollection();
-        $this->tricks = new ArrayCollection();
-        $this->tricks_update = new ArrayCollection();
-    }
+    private $password;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(string $firstname): self
-    {
-        $this->firstname = $firstname;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
     }
 
     public function getEmail(): ?string
@@ -128,169 +69,80 @@ class User
         return $this;
     }
 
-    public function getForgotPassIdentity(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
     {
-        return $this->forgotPassIdentity;
+        return (string) $this->email;
     }
 
-    public function setForgotPassIdentity(string $forgotPassIdentity): self
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        $this->forgotPassIdentity = $forgotPassIdentity;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }
 
     /**
-     * @return Collection|Comment[]
+     * @see UserInterface
      */
-    public function getComments(): Collection
+    public function getPassword()
     {
-        return $this->comments;
-    }
-
-    public function addComment(Comment $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments[] = $comment;
-            $comment->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): self
-    {
-        if ($this->comments->contains($comment)) {
-            $this->comments->removeElement($comment);
-            // set the owning side to null (unless already changed)
-            if ($comment->getUser() === $this) {
-                $comment->setUser(null);
-            }
-        }
-
-        return $this;
+        return $this->password;
     }
 
     /**
-     * @return Collection|Video[]
+     * @see UserInterface
      */
-    public function getVideos(): Collection
+    public function getSalt()
     {
-        return $this->videos;
-    }
-
-    public function addVideo(Video $video): self
-    {
-        if (!$this->videos->contains($video)) {
-            $this->videos[] = $video;
-            $video->setAuthor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVideo(Video $video): self
-    {
-        if ($this->videos->contains($video)) {
-            $this->videos->removeElement($video);
-            // set the owning side to null (unless already changed)
-            if ($video->getAuthor() === $this) {
-                $video->setAuthor(null);
-            }
-        }
-
-        return $this;
+        // not needed for apps that do not check user passwords
     }
 
     /**
-     * @return Collection|Picture[]
+     * @see UserInterface
      */
-    public function getPictures(): Collection
+    public function eraseCredentials()
     {
-        return $this->pictures;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
-    public function addPicture(Picture $picture): self
+    public function getFirstname(): ?string
     {
-        if (!$this->pictures->contains($picture)) {
-            $this->pictures[] = $picture;
-            $picture->setAuthor($this);
-        }
+        return $this->Firstname;
+    }
+
+    public function setFirstname(string $Firstname): self
+    {
+        $this->Firstname = $Firstname;
 
         return $this;
     }
 
-    public function removePicture(Picture $picture): self
+    public function getName(): ?string
     {
-        if ($this->pictures->contains($picture)) {
-            $this->pictures->removeElement($picture);
-            // set the owning side to null (unless already changed)
-            if ($picture->getAuthor() === $this) {
-                $picture->setAuthor(null);
-            }
-        }
-
-        return $this;
+        return $this->Name;
     }
 
-    /**
-     * @return Collection|Trick[]
-     */
-    public function getTricks(): Collection
+    public function setName(string $Name): self
     {
-        return $this->tricks;
-    }
-
-    public function addTrick(Trick $trick): self
-    {
-        if (!$this->tricks->contains($trick)) {
-            $this->tricks[] = $trick;
-            $trick->setCreatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTrick(Trick $trick): self
-    {
-        if ($this->tricks->contains($trick)) {
-            $this->tricks->removeElement($trick);
-            // set the owning side to null (unless already changed)
-            if ($trick->getCreatedBy() === $this) {
-                $trick->setCreatedBy(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Trick[]
-     */
-    public function getTricksUpdate(): Collection
-    {
-        return $this->tricks_update;
-    }
-
-    public function addTricksUpdate(Trick $tricksUpdate): self
-    {
-        if (!$this->tricks_update->contains($tricksUpdate)) {
-            $this->tricks_update[] = $tricksUpdate;
-            $tricksUpdate->setUpdatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTricksUpdate(Trick $tricksUpdate): self
-    {
-        if ($this->tricks_update->contains($tricksUpdate)) {
-            $this->tricks_update->removeElement($tricksUpdate);
-            // set the owning side to null (unless already changed)
-            if ($tricksUpdate->getUpdatedBy() === $this) {
-                $tricksUpdate->setUpdatedBy(null);
-            }
-        }
+        $this->Name = $Name;
 
         return $this;
     }
@@ -307,26 +159,21 @@ class User
         return $this;
     }
 
-    public function getName(): ?string
+    public function getPicture(): ?string
     {
-        return $this->name;
+        return $this->Picture;
     }
 
-    public function setName(string $name): self
+    public function setPicture(string $Picture): self
     {
-        $this->name = $name;
+        $this->Picture = $Picture;
 
         return $this;
     }
 
-    public function getPicture(): ?string
+    public function setPassword(string $password): self
     {
-        return $this->picture;
-    }
-
-    public function setPicture(string $picture): self
-    {
-        $this->picture = $picture;
+        $this->password = $password;
 
         return $this;
     }

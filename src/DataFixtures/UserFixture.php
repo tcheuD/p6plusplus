@@ -4,9 +4,17 @@ namespace App\DataFixtures;
 
 use App\Entity\User;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixture extends BaseFixture
 {
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
     private static $picture = [
         '1.jpg',
         '2.jpg',
@@ -25,11 +33,13 @@ class UserFixture extends BaseFixture
     {
         $this->createMany(10, 'user', function ($i) {
            $user = new User();
-           $user->setEmail(sprintf('snowtrick@snowtrick.com', $i));
+           $user->setEmail(sprintf('snowtrick%d@snowtrick.com', $i));
            $user->setFirstname($this->faker->firstName());
+           $user->setPassword($this->passwordEncoder->encodePassword(
+               $user,
+               'password' // Safest password in the world :D
+           ));
            $user->setName($this->faker->name());
-           $user->setPassword($this->faker->password());
-           $user->setForgotPassIdentity($this->faker->password());
            $user->setRegistrationDate($this->faker->dateTimeBetween('-100 days', '-1 days'));
            $user->setPicture($this->faker->randomElement(self::$picture));
 
