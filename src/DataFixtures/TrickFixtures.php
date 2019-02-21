@@ -29,7 +29,7 @@ class TrickFixtures extends BaseFixture implements DependentFixtureInterface
             $title = self::$titles[$i];
             $trick->setTitle($title)
                 ->setCreationDate($this->faker->dateTimeBetween('-100 days', '-1 days'))
-                ->setCategory('snow')
+                ->setCategory($this->getRandomReference('category'))
                 ->setCreatedBy($this->getRandomReference('user'))
                 ->setContent($this->faker->realText())
                 ->setSlug(strtolower(str_replace(' ', '-', $title)));
@@ -43,6 +43,7 @@ class TrickFixtures extends BaseFixture implements DependentFixtureInterface
     {
         return [
             UserFixture::class,
+            CategoryFixtures::class,
         ];
     }
 }
