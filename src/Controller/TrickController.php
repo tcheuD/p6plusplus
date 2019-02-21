@@ -24,7 +24,7 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/", name="index")
+     * @Route("/", name="app_homepage")
      */
     public function showTricks()
     {
