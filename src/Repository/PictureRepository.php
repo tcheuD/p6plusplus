@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Picture;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Validator\Constraints\IsNull;
 
 /**
  * @method Picture|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,6 +19,16 @@ class PictureRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Picture::class);
     }
+
+    public function findUnusedPicByUser()
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.trick is null')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 
     // /**
     //  * @return Picture[] Returns an array of Picture objects
