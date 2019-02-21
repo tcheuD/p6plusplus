@@ -1,7 +1,7 @@
 <h1>{{ trick.title }}</h1>
 <div>
     {{ trick.content}}
-    <em>{{ trick.category }}</em>
+    <em>{{ trick.category.name }}</em>
 </div>
 {% for picture in trick.pictures %}
     <img style="width:25%" src="{{ asset(picture.imagePath) }}" alt="">
