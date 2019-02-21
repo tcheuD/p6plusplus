@@ -27,8 +27,8 @@ class Picture
     private $url;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="pictures")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="pictures", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true)
      */
     private $trick;
 
@@ -112,4 +112,11 @@ class Picture
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->getImagePath();
+    }
+
+
 }
