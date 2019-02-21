@@ -31,11 +31,6 @@ class Trick
     private $content;
 
     /**
-     * @ORM\Column(type="string", length=100)
-     */
-    private $category;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick")
      */
     private $comments;
@@ -56,18 +51,18 @@ class Trick
     private $pictures;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="trick")
+     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="trick", cascade={"persist"})
      */
     private $videos;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tricks")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tricks", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $createdBy;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tricks_update")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tricks_update", cascade={"persist"})
      */
     private $updatedBy;
 
@@ -75,6 +70,12 @@ class Trick
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="trick")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
 
     public function __construct()
     {
@@ -108,18 +109,6 @@ class Trick
     public function setContent(string $content): self
     {
         $this->content = $content;
-
-        return $this;
-    }
-
-    public function getCategory(): ?string
-    {
-        return $this->category;
-    }
-
-    public function setCategory(string $category): self
-    {
-        $this->category = $category;
 
         return $this;
     }
@@ -273,6 +262,18 @@ class Trick
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
