@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Add picture</h1>
+
+    {{ form_start(trickForm) }}
+    {{ form_widget(trickForm) }}
+
+    <button type="submit">Submit</button>
+    {{ form_end(trickForm) }}
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+
