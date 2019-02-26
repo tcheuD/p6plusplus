@@ -7,6 +7,7 @@ use App\Entity\Trick;
 use App\Form\PictureFormType;
 use App\Form\TrickFormType;
 use App\Service\FileUploader;
+use App\Validator\UniqueVideo;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +44,6 @@ class TrickAdminController extends AbstractController
             $trick->setCreatedBy($this->getUser());
 
 
-
             if (!is_null($form->getData()->getVideos())) {
                 $videosCollection = $form->getData()->getVideos()->toArray();
                 foreach ($videosCollection as $b => $video) {
@@ -66,18 +66,6 @@ class TrickAdminController extends AbstractController
                 }
             }
 
-
-            /**$video = $trick->getVideos();
-
-            $video->setUrl($trick->getVideos['url']);
-            $video->setCreationDate(new \DateTime());
-            $video->setPlatform('nezoiuez');
-            $video->setAuthor($this->getUser());
-            $video->setIdentif('uvivre');
-            $video->setNumber(1);
-
-            $trick->addVideo($video);
-**/
             $em->persist($trick);
             $em->flush();
 
