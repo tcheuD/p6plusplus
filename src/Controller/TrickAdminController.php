@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Picture;
 use App\Entity\Trick;
+use App\Form\Handler\AddTrickHandler;
 use App\Form\PictureFormType;
 use App\Form\TrickFormType;
 use App\Service\FileUploader;
-use App\Validator\UniqueVideo;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,44 +28,15 @@ class TrickAdminController extends AbstractController
      */
     public function new(EntityManagerInterface $em, Request $request)
     {
-
         $trick = new Trick();
 
         $form = $this->createForm(TrickFormType::class, $trick);
-
-
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
 
-            $trick = $form->getData();
+        $trickHandler = new AddTrickHandler();
 
-            $trick->setCreationDate(new \DateTime());
-            $trick->setSlug(strtolower(str_replace(' ', '-', $trick->getTitle())));
-            $trick->setCreatedBy($this->getUser());
-
-
-            if (!is_null($form->getData()->getVideos())) {
-                $videosCollection = $form->getData()->getVideos()->toArray();
-                foreach ($videosCollection as $b => $video) {
-                    preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $video->getUrl(), $match);
-                    $videos[] = $video->getUrl();
-                    $video->setNumber(1);
-                    $video->setTrick($trick);
-                    $video->setCreationDate(new \DateTime());
-                    $video->setIdentif($match[1]);
-                    $video->setAuthor($trick->getCreatedBy());
-                }
-            }
-
-            if (!is_null($form->getData()->getPictures())) {
-                $picturesCollection = $form->getData()->getPictures()->toArray();
-                foreach ($picturesCollection as $b => $picture) {
-                    $videos[] = $picture->getUrl();
-                    $picture->setAuthor($trick->getCreatedBy());
-                    $picture->setTrick($trick);
-                }
-            }
-
+        if ($trickHandler->handle($form, $trick, $this->getUser()))
+        {
             $em->persist($trick);
             $em->flush();
 
@@ -73,7 +44,6 @@ class TrickAdminController extends AbstractController
 
             return $this->redirectToRoute('app_homepage');
         }
-
         return $this->render('trick_admin/new.html.twig', [
             'trickForm' => $form->createView(),
         ]);
