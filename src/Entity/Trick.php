@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
@@ -84,6 +83,7 @@ class Trick
 
     public function __construct()
     {
+        $this->creationDate = new \DateTime();
         $this->comments = new ArrayCollection();
         $this->pictures = new ArrayCollection();
         $this->videos = new ArrayCollection();
