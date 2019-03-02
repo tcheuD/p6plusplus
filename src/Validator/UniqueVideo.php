@@ -16,6 +16,7 @@ class UniqueVideo extends Constraint
      */
 
     public $message = 'Cette vidéo existe déjà';
+    public $invalidUrl = 'Url invalide';
 
     public function validatedBy()
     {
