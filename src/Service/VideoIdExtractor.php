@@ -15,7 +15,7 @@ class VideoIdExtractor
             return $match[1];
         }
 
-        return;
+        return false;
     }
 
 }
