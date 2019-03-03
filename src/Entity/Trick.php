@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
@@ -22,11 +23,13 @@ class Trick
 
     /**
      * @ORM\Column(name="title", type="string", length=100, unique=true)
+     * @Assert\NotBlank()
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
      */
     private $content;
 
@@ -46,12 +49,13 @@ class Trick
     private $modificationDate;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Picture", mappedBy="trick")
+     * @ORM\OneToMany(targetEntity="App\Entity\Picture", mappedBy="trick", cascade={"persist"})
      */
     private $pictures;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="trick", cascade={"persist"})
+     * @Assert\Valid()
      */
     private $videos;
 
@@ -79,6 +83,7 @@ class Trick
 
     public function __construct()
     {
+        $this->creationDate = new \DateTime();
         $this->comments = new ArrayCollection();
         $this->pictures = new ArrayCollection();
         $this->videos = new ArrayCollection();

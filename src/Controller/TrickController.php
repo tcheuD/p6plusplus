@@ -17,7 +17,6 @@ class TrickController extends AbstractController
             ->getRepository(Trick::class)
             ->findBySlug($slug);
 
-
         return $this->render('trick/show.html.twig', [
             'trick' => $trick
         ]);

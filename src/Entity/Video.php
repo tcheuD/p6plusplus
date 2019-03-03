@@ -2,10 +2,17 @@
 
 namespace App\Entity;
 
+use App\Validator\UniqueVideo;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VideoRepository")
+ * @UniqueEntity(
+ *     fields={"identif"},
+ *     message="test"
+ * )
  */
 class Video
 {
@@ -23,6 +30,8 @@ class Video
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @UniqueVideo()
      */
     private $url;
 
@@ -49,7 +58,7 @@ class Video
     private $author;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $identif;
 
@@ -146,6 +155,4 @@ class Video
     {
         return $this->getIdentif();
     }
-
-
 }

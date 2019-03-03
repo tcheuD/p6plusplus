@@ -4,13 +4,23 @@
     <h1>New trick</h1>
 
     {{ form_start(trickForm) }}
-        {{ form_widget(trickForm) }}
+        {{ form_row(trickForm.title) }}
+        {{ form_row(trickForm.content) }}
+        {{ form_row(trickForm.pictures) }} <br>
+    <ul class="videos" data-prototype="{{ form_widget(trickForm.videos.vars.prototype)|e('html_attr') }}">
+        {% for row in trickForm.videos %}
+            {{ form_row(row) }}
+        {% endfor %}
+    </ul>
 
+    {{ form_row(trickForm.category) }}
         <button type="submit">Submit</button>
     {{ form_end(trickForm) }}
+
 {% endblock %}
 
-{% block title %}
-
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/addVideo.js') }}"></script>
 {% endblock %}
 
