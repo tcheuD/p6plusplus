@@ -9,15 +9,16 @@ use App\Form\PictureFormType;
 use App\Form\TrickFormType;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class TrickAdminController
  * @package App\Controller
+ * @IsGranted("ROLE_USER")
  */
-class TrickAdminController extends AbstractController
+class TrickAdminController extends BaseController
 {
     /**
      * @Route("/trick/new", name="trick_admin")
@@ -54,6 +55,9 @@ class TrickAdminController extends AbstractController
      */
     public function addPicture(EntityManagerInterface $em, Request $request, FileUploader $fileUploader)
     {
+
+        //TODO: HandlePictureForm
+
         $form = $this->createForm(PictureFormType::class);
 
         $form->handleRequest($request);
