@@ -4,9 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Trick;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class TrickController extends AbstractController
+class TrickController extends BaseController
 {
     /**
      * @Route("/trick/{slug}", name="show_trick")
