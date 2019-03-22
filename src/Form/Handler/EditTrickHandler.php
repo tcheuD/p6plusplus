@@ -10,7 +10,7 @@ use App\Service\SlugBuilder;
 use App\Service\VideoIdExtractor;
 use Symfony\Component\Form\FormInterface;
 
-class AddTrickHandler
+class EditTrickHandler
 {
 
     public function handle(FormInterface $form,  Trick $trick, $user, FileUploader $fileUploader)
@@ -19,12 +19,13 @@ class AddTrickHandler
 
             $videoIdExtractor = new VideoIdExtractor();
             $slugBuilder = new SlugBuilder();
+            $mainPicture = $form['mainPicture']->getData();
 
             $trick = $form->getData();
 
             $trick->setSlug($slugBuilder->buildSlug($trick->getTitle()));
             $trick->setCreatedBy($user);
-            $trick->setMainPicture($fileUploader->upload($form['mainPicture']['url']->getData()));
+            $trick->setMainPicture($mainPicture->getUrl());
 
 
             $videosCollection = $form->getData()->getVideos()->toArray();
@@ -42,15 +43,18 @@ class AddTrickHandler
             $picturesCollection = $form->getData()->getPictures()->toArray();
             foreach ($picturesCollection as $b => $picture) {
 
-                $filename = $fileUploader->upload($form['pictures'][$b]['url']->getData());
+                if(!is_null($form['pictures'][$b]['url']->getData()))
+                {
+                    $filename = $fileUploader->upload($form['pictures'][$b]['url']->getData());
 
-                /** @var Picture $picture */
-                $pictures[] = $picture->getUrl();
-                $picture->setAuthor($trick->getCreatedBy());
-                $picture->addTrick($trick);
-                $picture->setUrl($filename);
-                $picture->setNumber(1);
-                $picture->setCreationDate(new \DateTime());
+                    /** @var Picture $picture */
+                    $pictures[] = $picture->getUrl();
+                    $picture->setAuthor($trick->getCreatedBy());
+                    $picture->addTrick($trick);
+                    $picture->setUrl($filename);
+                    $picture->setNumber(1);
+                    $picture->setCreationDate(new \DateTime());
+                }
             }
 
             return true;

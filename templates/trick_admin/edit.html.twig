@@ -1,18 +1,22 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>New trick</h1>
 
-    {% form_theme trickForm 'jquery.collection.html.twig' %}
+    <h1>Edit trick</h1>
+    {% form_theme trickForm
+        'mediaCollectionFormTheme.html.twig'
+        'jquery.collection.html.twig'
+        'base.html.twig'
+    %}
+
     {{ form_start(trickForm) }}
-        {{ form_row(trickForm.title) }}
-        {{ form_row(trickForm.content) }}
+    {{ form_row(trickForm.title) }}
+    {{ form_row(trickForm.content) }}
     {{ form_row(trickForm.mainPicture) }}
     {{ form_row(trickForm.pictures) }}
     {{ form_row(trickForm.videos) }}
-
     {{ form_row(trickForm.category) }}
-        <button type="submit">Submit</button>
+    <button type="submit">Submit</button>
     {{ form_end(trickForm) }}
 
 {% endblock %}
