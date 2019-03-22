@@ -3,6 +3,11 @@
     {{ trick.content}}
     <em>{{ trick.category.name }}</em>
 </div>
+<div>
+    <p>Image principale:</p>
+
+    <img style="width:40%" src="{{ asset(trick.mainPicturePath) }}" alt="">
+</div>
 {% for picture in trick.pictures %}
     <img style="width:25%" src="{{ asset(picture.imagePath) }}" alt="">
 {% endfor %}
