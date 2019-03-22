@@ -3,15 +3,13 @@
 {% block body %}
     <h1>New trick</h1>
 
+    {% form_theme trickForm 'jquery.collection.html.twig' %}
     {{ form_start(trickForm) }}
         {{ form_row(trickForm.title) }}
         {{ form_row(trickForm.content) }}
-        {{ form_row(trickForm.pictures) }} <br>
-    <ul class="videos" data-prototype="{{ form_widget(trickForm.videos.vars.prototype)|e('html_attr') }}">
-        {% for row in trickForm.videos %}
-            {{ form_row(row) }}
-        {% endfor %}
-    </ul>
+    {{ form_row(trickForm.mainPicture) }}
+    {{ form_row(trickForm.pictures) }}
+    {{ form_row(trickForm.videos) }}
 
     {{ form_row(trickForm.category) }}
         <button type="submit">Submit</button>
@@ -21,6 +19,10 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('js/addVideo.js') }}"></script>
+    <script src="{{ asset('js/jquery.collection.js') }}"></script>
+    <script type="text/javascript">
+        $('.collection-pictures').collection();
+        $('.collection-videos').collection();
+    </script>
 {% endblock %}
 
