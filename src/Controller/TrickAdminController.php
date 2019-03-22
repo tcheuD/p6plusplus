@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Picture;
 use App\Entity\Trick;
+use App\Form\AddPictureFormType;
+use App\Form\EditTrickFormType;
 use App\Form\Handler\AddTrickHandler;
-use App\Form\PictureFormType;
+use App\Form\Handler\EditTrickHandler;
 use App\Form\TrickFormType;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,16 +29,17 @@ class TrickAdminController extends BaseController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
-    public function new(EntityManagerInterface $em, Request $request)
+    public function new(EntityManagerInterface $em, Request $request, FileUploader $fileUploader)
     {
+
         $trick = new Trick();
 
-        $form = $this->createForm(TrickFormType::class, $trick);
+        $form = $this->createForm(TrickFormType::class, $trick );
         $form->handleRequest($request);
 
         $trickHandler = new AddTrickHandler();
 
-        if ($trickHandler->handle($form, $trick, $this->getUser()))
+        if ($trickHandler->handle($form, $trick, $this->getUser(), $fileUploader))
         {
             $em->persist($trick);
             $em->flush();
@@ -51,32 +54,61 @@ class TrickAdminController extends BaseController
     }
 
     /**
+     * @Route("trick/edit/{slug}", name="edit_trick")
+     */
+    public function edit(Trick $trick, Request $request, EntityManagerInterface $em, FileUploader $fileUploader)
+    {
+
+        $form = $this->createForm(EditTrickFormType::class, $trick);
+        $form->handleRequest($request);
+
+        $trickHandler = new EditTrickHandler();
+
+        if ($trickHandler->handle($form, $trick, $this->getUser(), $fileUploader))
+        {
+            $em->persist($trick);
+            $em->flush();
+
+            $this->addFlash('success', 'La figure a bien été mise à jour');
+
+            return $this->redirectToRoute('app_homepage');
+        }
+        return $this->render('trick_admin/edit.html.twig', [
+            'trickForm' => $form->createView(),
+            'trick' => $trick,
+        ]);
+    }
+
+    /**
      * @Route("/trick/pic", name="trick_pic")
      */
     public function addPicture(EntityManagerInterface $em, Request $request, FileUploader $fileUploader)
     {
-
         //TODO: HandlePictureForm
 
-        $form = $this->createForm(PictureFormType::class);
+        $form = $this->createForm(AddPictureFormType::class);
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            $picturesCollection = $form['pictures']->getData();
+            foreach ($picturesCollection as $b => $picture) {
 
-            $data = $form->getData();
+                $filename = $fileUploader->upload($form['pictures'][$b]['url']->getData());
 
-            $filename = $fileUploader->upload($data['url']);
+                /** @var Picture $picture */
+                $picture->setAuthor($this->getUser());
+                $picture->setCreationDate(new \DateTime());
+                $picture->setUrl($filename);
+                $picture->setNumber(1);
 
-            $picture = new Picture();
-            $picture->setCreationDate(new \DateTime());
-            $picture->setAuthor($this->getUser());
-            $picture->setUrl($filename);
-            $picture->setNumber(1);
+                $em->persist($picture);
+            }
+                $em->flush();
 
-            $em->persist($picture);
-            $em->flush();
+            $this->addFlash('success', 'Le ou les images ont bien été ajoutée');
 
+            return $this->redirectToRoute('trick_pic');
         }
 
         return $this->render('trick_admin/addPicture.html.twig', [
