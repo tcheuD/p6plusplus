@@ -22,8 +22,17 @@
 
 <h3>Commentaires : </h3>
 
+{% if is_granted('ROLE_USER') %}
+    {{ form_start(commentForm) }}
+    {{ form_widget(commentForm) }}
+
+    <button type="submit">
+        Ajouter
+    </button>
+    {{ form_end(commentForm) }}
+{% endif %}
 {% for comment in trick.comments %}
     <p>Par: {{ comment.user.firstname }} {{ comment.user.name }} le {{ comment.commentDate|date('Y-m-d') }}</p>
-    {{ comment.user.picture }}
+    <img style="width:150px" src="{{ asset(comment.user.picturePath) }}" alt="">
     <p>{{ comment.comment }}</p>
 {% endfor %}
