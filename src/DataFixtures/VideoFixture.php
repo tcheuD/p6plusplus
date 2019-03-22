@@ -51,7 +51,7 @@ class VideoFixture extends BaseFixture implements DependentFixtureInterface
 
 
             $video = new Video();
-            $video->setTrick($this->getRandomReference('trick'));
+            $video->addTrick($this->getRandomReference('trick'));
             $video->setCreationDate($this->faker->dateTimeBetween('-100 days', '-1 days'));
             $video->setAuthor($this->getRandomReference('user'));
             $video->setNumber(1);

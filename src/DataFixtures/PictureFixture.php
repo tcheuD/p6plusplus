@@ -30,7 +30,7 @@ class PictureFixture extends BaseFixture implements DependentFixtureInterface
             $picture->setNumber(1);
             $picture->setAuthor($this->getRandomReference('user'));
             $picture->setCreationDate($this->faker->dateTimeBetween('-100 days', '-1 days'));
-            $picture->setTrick($this->getRandomReference('trick'));
+            $picture->addTrick($this->getRandomReference('trick'));
 
             return $picture;
         });
