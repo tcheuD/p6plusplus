@@ -3,21 +3,43 @@
 namespace App\Controller;
 
 use App\Entity\Trick;
+use App\Form\CommentType;
+use App\Form\Handler\AddCommentHandler;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 class TrickController extends BaseController
 {
     /**
      * @Route("/trick/{slug}", name="show_trick")
      */
-    public function showTrick($slug)
+    public function showTrick($slug, Request $request, EntityManagerInterface $em)
     {
         $trick = $this->getDoctrine()
             ->getRepository(Trick::class)
             ->findBySlug($slug);
 
+        $form = $this->createForm(CommentType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $commentHandler = new AddCommentHandler();
+            $comment = $commentHandler->handle($form, $trick, $this->getUser());
+
+            if ($comment) {
+                $em->persist($comment);
+                $em->flush();
+                $this->addFlash('success', 'Le commentaire a bien été ajouté');
+            }
+        }
+
+
         return $this->render('trick/show.html.twig', [
-            'trick' => $trick
+            'trick' => $trick,
+            'commentForm' => $form->createView()
+
         ]);
     }
 
