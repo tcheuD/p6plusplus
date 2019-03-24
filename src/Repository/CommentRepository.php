@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
+use App\Entity\Trick;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method Comment|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +20,42 @@ class CommentRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Comment::class);
+    }
+
+    public function findByTrickAndPaginate(Trick $trick, $page, $nbMaxByPage)
+    {
+        if (!is_numeric($page)) {
+            throw new \InvalidArgumentException(
+                'La valeur de l\'argument $page est incorrecte (valeur : ' . $page . ').'
+            );
+        }
+
+        if ($page < 1) {
+            throw new NotFoundHttpException('La page demandée n\'existe pas');
+        }
+
+        if (!is_numeric($nbMaxByPage)) {
+            throw new \InvalidArgumentException(
+                'La valeur de l\'argument $nbMaxParPage est incorrecte (valeur : ' . $nbMaxByPage . ').'
+            );
+        }
+
+        $firstResult = ($page - 1) * $nbMaxByPage;
+        $qb = $this->createQueryBuilder('a')
+            ->andWhere('a.trick = :trick')
+            ->setParameter('trick', $trick)
+            ->orderBy('a.commentDate', 'DESC')
+            ->setFirstResult($firstResult)
+            ->setMaxResults($nbMaxByPage)
+            ->getQuery();
+
+        $paginator = new Paginator($qb);
+
+        if ( ($paginator->count() <= $firstResult) && $page != 1) {
+            throw new NotFoundHttpException('La page demandée n\'existe pas.'); // page 404, sauf pour la première page
+        }
+
+        return $paginator;
     }
 
     // /**

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Form\CommentType;
 use App\Form\Handler\AddCommentHandler;
@@ -12,9 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
 class TrickController extends BaseController
 {
     /**
-     * @Route("/trick/{slug}", name="show_trick")
+     * @Route("/trick/{slug}/{page}", requirements={"page" = "\d+"}, name="show_trick")
      */
-    public function showTrick($slug, Request $request, EntityManagerInterface $em)
+    public function showTrick($slug, $page, Request $request, EntityManagerInterface $em)
     {
         $trick = $this->getDoctrine()
             ->getRepository(Trick::class)
@@ -22,6 +23,17 @@ class TrickController extends BaseController
 
         $form = $this->createForm(CommentType::class);
         $form->handleRequest($request);
+
+        $comments = $this->getDoctrine()
+            ->getRepository(Comment::class)
+            ->findByTrickAndPaginate($trick, $page, 5 );
+
+        $pagination = array(
+            'page' => $page,
+            'nbPages' => ceil(count($comments) / 5),
+            'nomRoute' => 'show_trick',
+            'paramsRoute' => array()
+        );
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -38,7 +50,9 @@ class TrickController extends BaseController
 
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
-            'commentForm' => $form->createView()
+            'commentForm' => $form->createView(),
+            'comments' => $comments,
+            'pagination' => $pagination
 
         ]);
     }
