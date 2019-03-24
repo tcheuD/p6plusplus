@@ -5,9 +5,9 @@
 {% block body %}
     {% for trick in tricks %}
         <div>
-            <a href="{{ path('show_trick', {slug: trick.slug}) }}">
+            <a href="{{ path('show_trick', {slug: trick.slug, page: '1'}) }}">
                 <p>{{ trick.title }}</p> </a>
-            <img style="width: 10%" src="{{ asset(trick.pictures[0].imagePath) }}" alt="">
+            <img style="width: 10%" src="{{ asset(trick.mainPicturePath) }}" alt="">
         </div>
     {% endfor %}
 
