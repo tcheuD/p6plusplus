@@ -4,8 +4,8 @@
 
     <h1>Edit trick</h1>
     {% form_theme trickForm
-        'mediaCollectionFormTheme.html.twig'
         'jquery.collection.html.twig'
+        'mediaCollectionFormTheme.html.twig'
         'base.html.twig'
     %}
 
@@ -23,6 +23,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('js/ajaxPictures.js') }}"></script>
     <script src="{{ asset('js/jquery.collection.js') }}"></script>
     <script type="text/javascript">
         $('.collection-pictures').collection();

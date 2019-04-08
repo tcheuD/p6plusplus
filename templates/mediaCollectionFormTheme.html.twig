@@ -1,7 +1,9 @@
 {% block PictureFormType_row %}
-    <div class="col-md-3">
+    <div class="col-md-3" >
         {% if data.url is defined %}
-            <img style="width: 10%" src="/images/{{ data.url }}" alt="">
+            <img style="width: 10%" src="/images/{{ data.url }}" id="{{ data.id }}" alt="">
+        {% else %}
+            <img style="width: 10%" src="" id="" alt="">
         {% endif %}
         {{ form_label(form) }}
         {{ form_errors(form) }}
@@ -25,6 +27,6 @@
 {% block _edit_trick_form_mainPicture_row %}
     {{ form_label(form) }}
     {{ form_errors(form) }}
-    <img style="width: 30%" src="/images/{{ data }}" alt="">
+    <img style="width: 30%" src="/{{ data }}" alt="" id="main-pic">
     {{ form_widget(form) }}
 {% endblock %}

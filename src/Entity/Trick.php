@@ -291,7 +291,7 @@ class Trick
 
     public function getMainPicturePath()
     {
-        $imagePath = 'images/'.$this->getMainPicture();
+        $imagePath = $this->getMainPicture();
 
         return $imagePath;
     }

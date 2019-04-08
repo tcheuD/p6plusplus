@@ -11,7 +11,9 @@ use App\Form\Handler\EditTrickHandler;
 use App\Form\TrickFormType;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
+use http\Env\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -62,6 +64,7 @@ class TrickAdminController extends BaseController
         $form = $this->createForm(EditTrickFormType::class, $trick);
         $form->handleRequest($request);
 
+        //dd($form["mainPicture"]);
         $trickHandler = new EditTrickHandler();
 
         if ($trickHandler->handle($form, $trick, $this->getUser(), $fileUploader))
@@ -115,5 +118,38 @@ class TrickAdminController extends BaseController
             'trickForm' => $form->createView(),
         ]);
 
+    }
+
+    /**
+     * @Route("/ajax", name="app_ajax")
+     */
+    public function ajax(Request $request, FileUploader $fileUploader, EntityManagerInterface $em)
+    {
+
+        if ($request->isXmlHttpRequest()){
+
+            $picture = $this->getDoctrine()
+                ->getRepository(Picture::class)
+                ->findOneById($request->request->get('picId'));
+
+
+            $file = $request->files->get('file');
+            $filename = $fileUploader->upload($file);
+
+            if ($picture) {
+                $picture->setAuthor($this->getUser());
+                $picture->setUrl($filename);
+                $picture->setCreationDate(new \DateTime());
+                $picture->setFilename($file->getClientOriginalName());
+
+                $em->persist($picture);
+                $em->flush();
+            }
+
+
+            return new JsonResponse($filename);
+        }
+
+        return new JsonResponse("This is not an ajax request");
     }
 }

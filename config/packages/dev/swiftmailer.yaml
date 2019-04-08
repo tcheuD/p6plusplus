@@ -2,3 +2,11 @@
 swiftmailer:
     # send all emails to a specific address
     #delivery_addresses: ['me@example.com']
+  delivery_addresses: ['tcheutcheud@gmail.com']
+  transport: smtp
+  #auth_mode: login
+  port: 587
+  host: ssl0.ovh.net
+  username: contact@damienchedan.fr
+  password: Rb61VxbdG98azr7
+  spool: { type: 'memory' }

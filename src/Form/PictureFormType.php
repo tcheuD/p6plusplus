@@ -19,6 +19,11 @@ class PictureFormType extends AbstractType
                 'image_property' => 'imagePath',
                  //'multiple' => true,
                 'mapped' => false,
+                'attr' => [
+                    'class' => 'pic',
+                    'id' =>'pic',
+                    //'onchange' => 'previewFile()'
+                ],
                 'constraints' => [
                     new Image(),
                     //new NotNull([

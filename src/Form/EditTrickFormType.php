@@ -7,6 +7,8 @@ use App\Entity\Picture;
 use App\Entity\Trick;
 use App\Repository\PictureRepository;
 use App\Repository\TrickRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -24,11 +26,13 @@ class EditTrickFormType extends AbstractType
 
     private $pictureRepository;
     private $trickRepository;
+    private $em;
 
-    public function __construct(PictureRepository $pictureRepository, TrickRepository $trickRepository)
+    public function __construct(EntityManagerInterface $em, PictureRepository $pictureRepository, TrickRepository $trickRepository)
     {
         $this->pictureRepository = $pictureRepository;
         $this->trickRepository = $trickRepository;
+        $this->em = $em;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -55,7 +59,6 @@ class EditTrickFormType extends AbstractType
                 'choices' => $options['data']->getPictures(),
                 'attr' => ['class' => 'save'],
             ])
-
 
             ->add('pictures', CollectionType::class, [
                 'entry_type' => PictureFormType::class,
@@ -90,8 +93,9 @@ class EditTrickFormType extends AbstractType
             ->addEventListener(
                 FormEvents::PRE_SET_DATA,
                 function (FormEvent $event) {
-                    /** @var Trick|null $data */
+                    /** @var Trick|null $data **/
                     $data = $event->getData();
+                    dump($data);
                     if (!$data) {
                         return;
                     }
@@ -117,21 +121,24 @@ class EditTrickFormType extends AbstractType
     private function setupSpecificLocationNameField(FormInterface $form, $picture)
     {
 
-        if (null === $picture) {
+        dump($form);
+        dump($picture);
+
+            if (null === $picture) {
             $form->remove('specificLocationName');
             return;
         }
-        $picture = $picture->toArray();
+
         $form->add('mainPicture', ChoiceType::class, [
         'label' => 'Image principale',
-        'choice_label' => function(Picture $picturee) {
-            return sprintf($picturee->getUrl());
+        'choice_label' => function(Picture $picture) {
+            return sprintf($picture->getUrl());
         },
         'choices' => $picture,
         'attr' => ['class' => 'save'],
     ]);
-    }
 
+    }
 
     public function configureOptions(OptionsResolver $resolver)
     {

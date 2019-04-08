@@ -8,6 +8,8 @@ use App\Entity\Video;
 use App\Service\FileUploader;
 use App\Service\SlugBuilder;
 use App\Service\VideoIdExtractor;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 
 class EditTrickHandler
@@ -20,12 +22,11 @@ class EditTrickHandler
             $videoIdExtractor = new VideoIdExtractor();
             $slugBuilder = new SlugBuilder();
             $mainPicture = $form['mainPicture']->getData();
-
             $trick = $form->getData();
 
             $trick->setSlug($slugBuilder->buildSlug($trick->getTitle()));
             $trick->setCreatedBy($user);
-            $trick->setMainPicture($mainPicture->getUrl());
+            $trick->setMainPicture($mainPicture);
 
 
             $videosCollection = $form->getData()->getVideos()->toArray();
