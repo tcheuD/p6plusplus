@@ -24,7 +24,7 @@ class AddTrickHandler
 
             $trick->setSlug($slugBuilder->buildSlug($trick->getTitle()));
             $trick->setCreatedBy($user);
-            $trick->setMainPicture($fileUploader->upload($form['mainPicture']['url']->getData()));
+            $trick->setMainPicture('images/'.$fileUploader->upload($form['mainPicture']['url']->getData()));
 
 
             $videosCollection = $form->getData()->getVideos()->toArray();
