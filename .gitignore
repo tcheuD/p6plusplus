@@ -20,3 +20,4 @@ app/Resources/views/jquery.collection.html.twig
 web/js/jquery.collection.js
 
 /public/uploads
+/config/packages/dev/swiftmailer.yaml
