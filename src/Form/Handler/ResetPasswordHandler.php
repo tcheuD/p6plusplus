@@ -16,6 +16,7 @@ class ResetPasswordHandler
                 $user,
                 $form['plainPassword']->getData()
             ));
+            $user->setUserPassIdentity(null);
 
             return $user;
     }
