@@ -95,14 +95,15 @@ class SecurityController extends BaseController
             $int = bin2hex($bytes);
 
             $user->setUserPassIdentity($int);
+            $user->getEmail();
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
 
-            $message = (new \Swift_Message('Hello Email'))
+            $message = (new \Swift_Message('SnowTricks | Réinitialisation de votre mot passe'))
                 ->setFrom('contact@damienchedan.fr')
-                ->setTo('tcheutcheud@gmail.com')
+                ->setTo($user->getEmail())
                 ->setBody(
                     $this->renderView(
                         'mail.html.twig',
@@ -151,14 +152,16 @@ class SecurityController extends BaseController
                     $em->persist($user);
                     $em->flush();
                     $this->addFlash('success', 'Votre mot de passe a bien été modifié !');
-                    //TODO: send mail after persist && set passIdentity to null
                 }
             }
-
+            return $this->render('security/resetPassword.html.twig', [
+                'resetPasswordForm' => $form->createView(),
+                ''
+            ]);
         }
 
-        return $this->render('security/resetPassword.html.twig', [
-            'resetPasswordForm' => $form->createView()
-        ]);
+        return $this->redirectToRoute('app_homepage');
+
+
     }
 }
