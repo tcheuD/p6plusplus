@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Validator\ForgotPassword;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,15 +15,22 @@ class ForgotPasswordFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'mapped' => 'false'
+                'mapped' => 'false',
+                'constraints' => [
+                    new ForgotPassword(),
+                    //new NotNull([
+                    //  'message' => 'nvuçrevurebv'
+                    //])
+                ]
             ])
+
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            //'data_class' => User::class,
         ]);
     }
 }
