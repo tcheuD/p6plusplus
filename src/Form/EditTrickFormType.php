@@ -95,7 +95,7 @@ class EditTrickFormType extends AbstractType
                 function (FormEvent $event) {
                     /** @var Trick|null $data **/
                     $data = $event->getData();
-                    dump($data);
+
                     if (!$data) {
                         return;
                     }
@@ -106,7 +106,7 @@ class EditTrickFormType extends AbstractType
                 }
             )
 
-            ->get('pictures')->addEventListener(
+            ->get('mainPicture')->addEventListener(
                 FormEvents::POST_SUBMIT,
                 function(FormEvent $event) {
                     $form = $event->getForm();
@@ -120,9 +120,6 @@ class EditTrickFormType extends AbstractType
 
     private function setupSpecificLocationNameField(FormInterface $form, $picture)
     {
-
-        dump($form);
-        dump($picture);
 
             if (null === $picture) {
             $form->remove('specificLocationName');
