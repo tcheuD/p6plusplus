@@ -11,7 +11,6 @@ use App\Form\Handler\EditTrickHandler;
 use App\Form\TrickFormType;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
-use http\Env\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,7 +63,6 @@ class TrickAdminController extends BaseController
         $form = $this->createForm(EditTrickFormType::class, $trick);
         $form->handleRequest($request);
 
-        //dd($form["mainPicture"]);
         $trickHandler = new EditTrickHandler();
 
         if ($trickHandler->handle($form, $trick, $this->getUser(), $fileUploader))
