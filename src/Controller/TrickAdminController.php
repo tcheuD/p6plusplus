@@ -81,6 +81,36 @@ class TrickAdminController extends BaseController
     }
 
     /**
+     * @Route("trick/delete/{slug}", name="delete_trick")
+     */
+    public function delete(Trick $trick, Request $request, EntityManagerInterface $em)
+    {
+        foreach ($trick->getVideos() as $video)
+        {
+            $trick->removeVideo($video);
+            $video->removeTrick($trick);
+        }
+
+        foreach ($trick->getPictures() as $picture)
+        {
+            $trick->removePicture($picture);
+            $picture->removeTrick($trick);
+        }
+
+        foreach ($trick->getComments() as $comment)
+        {
+            $trick->removeComment($comment);
+            $em->remove($comment);
+        }
+
+        if ($trick) {
+            $em->persist($trick);
+            $em->remove($trick);
+            $em->flush();
+        }
+    }
+
+    /**
      * @Route("/trick/pic", name="trick_pic")
      */
     public function addPicture(EntityManagerInterface $em, Request $request, FileUploader $fileUploader)
@@ -150,4 +180,52 @@ class TrickAdminController extends BaseController
 
         return new JsonResponse("This is not an ajax request");
     }
+
+    /**
+     * @Route("/ajax3", name="app_ajax3")
+     */
+    public function ajax3(Request $request, EntityManagerInterface $em)
+    {
+
+        if ($request->isXmlHttpRequest()){
+
+            $slug = $request->request->get('slug');
+
+            $trick = $this->getDoctrine()
+                ->getRepository(Trick::class)
+                ->findBySlug($slug);
+
+
+            foreach ($trick->getVideos() as $video)
+            {
+                $trick->removeVideo($video);
+                $video->removeTrick($trick);
+            }
+
+            foreach ($trick->getPictures() as $picture)
+            {
+                $trick->removePicture($picture);
+                $picture->removeTrick($trick);
+            }
+
+            foreach ($trick->getComments() as $comment)
+            {
+                $trick->removeComment($comment);
+                $em->remove($comment);
+            }
+
+            if ($trick) {
+                $em->persist($trick);
+                $em->remove($trick);
+                $em->flush();
+            }
+
+            $this->addFlash('success', 'La figure a bien été supprimée');
+
+            return $this->redirectToRoute('app_homepage');
+        }
+
+        return new JsonResponse("This is not an ajax request");
+    }
+
 }

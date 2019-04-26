@@ -4,8 +4,6 @@ namespace App\Validator;
 
 use App\Repository\VideoRepository;
 use App\Service\VideoIdExtractor;
-use http\Exception\UnexpectedValueException;
-use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -22,8 +20,6 @@ class UniqueVideoValidator extends ConstraintValidator
 
     public function validate($value, Constraint $constraint)
     {
-        /* @var $constraint App/Validator\UniqueVideo */
-
 
         $id = $this->idExtractor->urlToId($value);
 

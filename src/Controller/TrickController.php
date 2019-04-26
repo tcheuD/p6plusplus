@@ -7,7 +7,9 @@ use App\Entity\Trick;
 use App\Form\CommentType;
 use App\Form\Handler\AddCommentHandler;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class TrickController extends BaseController
@@ -60,14 +62,61 @@ class TrickController extends BaseController
     /**
      * @Route("/", name="app_homepage")
      */
-    public function showTricks()
+    public function showTricks(EntityManagerInterface $em)
     {
         $tricks = $this->getDoctrine()
             ->getRepository(Trick::class)
-            ->findAll();
+            ->findAllAndPaginate(1, 15);
+
+        $queryBuilder = $em->createQueryBuilder();
+        $queryBuilder->select('COUNT(u.id)')
+            ->from(Trick::class, 'u');
+        $query = $queryBuilder->getQuery();
+        $numberOfTricks = $query->getSingleScalarResult();
+
 
         return $this->render('trick/index.html.twig', [
-           'tricks' => $tricks
+           'tricks' => $tricks,
+            'numberOfTricks' => $numberOfTricks
         ]);
+    }
+
+    /**
+     * @Route("/ajax2", name="app_ajax2")
+     */
+    public function ajax(Request $request)
+    {
+
+        if ($request->isXmlHttpRequest()){
+
+            $lol = $request->request->get('row');
+            intval($lol);
+
+            $tricks = $this->getDoctrine()
+                ->getRepository(Trick::class)
+                ->findAllAndPaginate(2, 15 );
+
+
+            $c = count($tricks);
+            foreach ($tricks as $post) {
+                dump($post);
+            }
+
+            $jsonData = array();
+            $idx = 0;
+            /** @var  $trick Trick */
+            foreach($tricks as $trick) {
+                $temp = array(
+                    'title' => $trick->getTitle(),
+                    'mainPicture' => $trick->getMainPicture(),
+                    'slug' => $trick->getSlug(),
+                );
+                $jsonData[$idx++] = $temp;
+            }
+
+                return new JsonResponse($jsonData);
+        }
+
+        return new JsonResponse("This is not an ajax request");
     }
 }

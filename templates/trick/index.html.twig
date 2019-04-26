@@ -3,12 +3,71 @@
 {% block title %}Home sweet home{% endblock %}
 
 {% block body %}
+    <section id="banner">
+        <div class="inner">
+
+            <header>
+                <h2>SnowTricks</h2>
+            </header>
+            <p>Rush <strong>B</strong> cyka
+                <br />
+                <br />
+                <footer>
+                    <ul class="buttons stacked">
+                        <li><a href="#main" class="button fit scrolly">Alright kurwa</a></li>
+                    </ul>
+                </footer>
+
+        </div>
+    </section>
+
+    <section class="wrapper style3 container special" id="main">
     {% for trick in tricks %}
-        <div>
+        {# <div>
             <a href="{{ path('show_trick', {slug: trick.slug, page: '1'}) }}">
                 <p>{{ trick.title }}</p> </a>
+            {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('edit_trick', {slug: trick.slug}) }}">Modifier</a>
+                <a href="{{ path('delete_trick', {slug: trick.slug}) }}">Supprimer</a>
+            {% endif %}
             <img style="width: 10%" src="{{ asset(trick.mainPicturePath) }}" alt="">
-        </div>
-    {% endfor %}
+        </div> #}
 
+        {% if loop.index0 is divisible by(5) %}
+            <div class="row">
+        {% endif %}
+        <div class="col-2 col-12-narrower">
+
+            <section>
+                <a href="{{ path('show_trick', {slug: trick.slug, page: '1'}) }}" class="image featured"><img {#style="width:486.677px; height: 209px;"#} src="{{ asset(trick.mainPicturePath) }}" alt="" /></a>
+                <header>
+                    <h3><a href="{{ path('show_trick', {slug: trick.slug, page: '1'}) }}">{{ trick.title }}</a></h3>
+                    {% if is_granted('ROLE_USER') %}
+                        <a href="{{ path('edit_trick', {slug: trick.slug}) }}">Modifier</a>
+                        <button class="delete" value="{{ trick.slug }}">Supprimer</button>
+                    {% endif %}
+                </header>
+            </section>
+
+        </div>
+        {% if loop.index is divisible by(5) or loop.last %}
+            </div>
+        {% endif %}
+    {% endfor %}
+        <footer class="major">
+            <ul class="buttons">
+                <li><a href="#" class="button load-more">See More</a></li>
+                <input type="hidden" id="row" value="0">
+                <input type="hidden" id="all" value="{{ numberOfTricks }}">
+            </ul>
+        </footer>
+        <div style="display: none" class="js-user-rating" data-is-authenticated="{{ app.user ? 'true' : 'false' }}">
+        </div>
+    </section>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/ajaxTricks.js') }}"></script>
+    <script src="{{ asset('js/deleteTrick.js') }}"></script>
 {% endblock %}

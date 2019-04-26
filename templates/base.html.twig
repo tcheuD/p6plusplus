@@ -3,16 +3,49 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+        {% endblock %}
     </head>
+    {% block body_class %}
     <body>
+    {% endblock %}
+        <div id="page-wrapper">
         {% for message in app.flashes('success') %}
             {{ message }}
         {% endfor %}
+            {% block header_class %}
+        <header id="header" class="alt">
+            {% endblock %}
+            <h1 id="logo"><a href="{{ path('app_homepage') }}">SnowTricks</a></h1>
+            <nav id="nav">
+                <ul>
+                    <li class="current"><a href="{{ path('app_homepage') }}">Tricks</a></li>
+                    {% if is_granted('ROLE_USER') %}
+                    <li><a href="{{ path('app_logout') }}" >Disconnect</a></li>
+                    {% else %}
+                    <li><a href="{{ path('app_register') }}" >Sign Up</a></li>
+                    <li><a href="{{ path('app_login') }}" >Login</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+
 
         {% block body %}{% endblock %}
+        </div>
         {% block javascripts %}
             <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+            <script src="{{ asset('js/jquery.dropotron.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.scrolly.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.scrollex.min.js') }}"></script>
+            <script src="{{ asset('js/browser.min.js') }}"></script>
+            <script src="{{ asset('js/browser.min.js') }}"></script>
+            <script src="{{ asset('js/breakpoints.min.js') }}"></script>
+            <script src="{{ asset('js/util.js') }}"></script>
+            <script src="{{ asset('js/main.js') }}"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
         {% endblock %}
     </body>
 </html>
