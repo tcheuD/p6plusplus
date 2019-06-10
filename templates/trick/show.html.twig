@@ -5,21 +5,40 @@
 {% block body %}
 <article id="main">
     <section class="wrapper style4 container">
-                <img src="{{ asset(trick.mainPicturePath) }}" class="img-fluid" alt="">
-        <div class="content">
-<h1>{{ trick.title }}</h1>
-<div>
-    {{ trick.content}}
-    <em>{{ trick.category.name }}</em>
-</div>
-<div>
-    <p>Image principale:</p>
+        <div class="mainPictureContainer">
+            <img src="{{ asset(trick.mainPicturePath) }}" class="img-fluid" alt="">
+            {% if is_granted('ROLE_USER') %}
+            <div class="top-right">
+                <form action="{{ path('edit_trick', {slug: trick.slug}) }}">
+                    <button class="edit" type="submit"><i class="fas fa-pen"></i></button>
+                </form>
+                <button class="btn delete" value="{{ trick.slug }}"><i class="fas fa-trash-alt"></i></button>
+            </div>
+            {% endif %}
+            <div class="centered"><h2>{{ trick.title }}</h2></div>
+        </div>
+        <div class="content" id="content-trick">
 
-    <img style="width:40%" src="{{ asset(trick.mainPicturePath) }}" alt="">
-</div>
-{% for picture in trick.pictures %}
+            {# {% for picture in trick.pictures %}
     <img style="width:25%" src="{{ asset(picture.imagePath) }}" alt="">
-{% endfor %}
+{% endfor %} #}
+
+            {#
+             {% for picture in trick.pictures %}
+            {% if loop.index0 is divisible by(6) %}
+            <div class="row">
+                {% endif %}
+                <div class="col-2 col-12-narrower">
+
+                    <section>
+                        <img style="max-width: 100%" src="{{ asset(picture.imagePath) }}" alt="">
+                    </section>
+
+                </div>
+                {% if loop.index is divisible by(6) or loop.last %}
+            </div>
+            {% endif %}
+            {% endfor %}
 
 <div>
     {% for video in trick.videos %}
@@ -28,11 +47,27 @@
                 frameborder="0"></iframe>
     {% endfor %}
 </div>
-            </section>
-        </div>
-    </section>
-</article>
+            #}
 
+                {% for picture in trick.pictures %}
+                    <div>
+                        <img style="width: 250px; height: 150px" src="{{ asset(picture.imagePath) }}" alt="">
+                    </div>
+                {% endfor %}
+                {% for video in trick.videos %}
+                    <div>
+                        <iframe src="http://www.youtube.com/embed/{{ video.identif }}?autoplay=0"
+                                frameborder="0"></iframe>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+        <p>
+            {{ trick.content }}
+        </p>
+
+<div class="comments">
 <h3>Commentaires : </h3>
 
 {% if is_granted('ROLE_USER') %}
@@ -40,15 +75,27 @@
     {{ form_widget(commentForm) }}
 
     <button type="submit">
-        Ajouter
+        Ajouter un commentaire
     </button>
     {{ form_end(commentForm) }}
 {% endif %}
 {% for comment in comments %}
-    <p>Par: {{ comment.user.firstname }} {{ comment.user.name }} le {{ comment.commentDate|date('Y-m-d') }}</p>
-    <img style="width:150px" src="{{ asset(comment.user.picturePath) }}" alt="">
-    <p>{{ comment.comment }}</p>
+            <div class="row-show">
+    <div class="circular--landscape">
+    <img src="{{ asset(comment.user.picturePath) }}" alt="">
+    </div>
+    <b>{{ comment.comment }}</b>
+    {{ comment.user.firstname }} {{ comment.user.name }} le {{ comment.commentDate|date('Y-m-d') }}
+    </div>
 {% endfor %}
 
 {% include 'pagination.html.twig' %}
+</div>
+
+    </section>
+</article>
 {% endblock %}
+    {% block javascripts %}
+    {{ parent() }}
+        <script src="{{ asset('js/deleteTrick.js') }}"></script>
+    {% endblock %}

@@ -19,6 +19,7 @@ class PictureFormType extends AbstractType
                 'image_property' => 'imagePath',
                  //'multiple' => true,
                 'mapped' => false,
+                'label' => 'Images',
                 'attr' => [
                     'class' => 'pic',
                     'id' =>'pic',

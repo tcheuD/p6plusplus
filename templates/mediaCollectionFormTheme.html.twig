@@ -1,32 +1,148 @@
-{% block PictureFormType_row %}
-    <div class="col-md-3" >
-        {% if data.url is defined %}
-            <img style="width: 10%" src="/images/{{ data.url }}" id="{{ data.id }}" alt="">
-        {% else %}
-            <img style="width: 10%" src="" id="" alt="">
-        {% endif %}
-        {{ form_label(form) }}
-        {{ form_errors(form) }}
-        {{ form_widget(form) }}
-    </div>
-
+{% block _edit_trick_form_pictures_row %}
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
 {% endblock %}
 
 {% block PictureFormType_widget %}
-    {{ form_widget(form) }}
-    <br/>
-    <p class="text-center">
+
+        <div class="content">
+        {% if data.url is defined %}
+            <img style="width: 250px; height: 150px" src="/images/{{ data.url }}" id="{{ data.id }}" href="/images/{{ data.url }}" alt="" class="test-popup-link">
+
+            <div id="{{ form.vars.id}}">
+                <div>
+                    <label for="{{ form.url.vars.id }}">
+                        <i class="fas fa-pen"></i>
+                    </label>
+                    <button class="btn delete collection-remove edit_trick_form_pictures-collection-remove edit_trick_form_pictures-collection-action"><i class="fas fa-trash-alt"></i></button>
+                    <input id="{{ form.url.vars.id }}" name="{{ form.url.vars.full_name }}" class="pic" type="file">
+                </div>
+            </div>
+        {% else %}
+            <img style="width: 250px; height: 150px;" src="" id="" alt="" class="hide">
+            <div id="{{ form.vars.id}}">
+                <div>
+                    <label for="{{ form.url.vars.id }}" class="hide">
+                        <i class="fas fa-pen"></i>
+                    </label>
+                    <button class="btn delete collection-remove edit_trick_form_pictures-collection-remove edit_trick_form_pictures-collection-action"><i class="fas fa-trash-alt"></i></button>
+                    <input id="{{ form.url.vars.id }}" name="{{ form.url.vars.full_name }}" class="input-pic-new pic" type="file" style="display: block">
+                </div>
+            </div>
+        {% endif %}
+
+            {#
+<label for="{{ form.name.vars.id }}"
+               class="{{ form.name.vars.required ? 'required' }}">
+            {{ form.name.vars.label }}
+        </label>
+        {{ form_widget(form.url, {
+            'icon': 'fas fa-pen',
+            'label': 'Bug',
+            'attr':{'class': 'edit' }
+        })}}
+        <button class="edit" type="submit"><i class="fas fa-pen"></i></button>
+
+        #}
+        {#
+        <label class="button i_clear">
+            <input type="checkbox" {{ block('widget_attributes') }} {% if value is defined %} value="{{ value }}"{% endif %} />
+            <span>{{ label }}</span>
+        </label>
+
+        <div class="icon-index">
+            <form action="#">
+                <button class="edit" type="submit"><i class="fas fa-pen"></i></button>
+            </form>
+            <button class="btn delete" value="#"><i class="fas fa-trash-alt"></i></button>
+        </div>
+        #}
+    <p class="text-center hide">
         <a href="#" class="collection-up btn btn-default">&lt;</a>
         <a href="#" class="collection-remove btn btn-default">-</a>
         <a href="#" class="collection-add btn btn-default">+</a>
         <a href="#" class="collection-down btn btn-default">&gt;</a>
     </p>
+    </div>
 
 {% endblock %}
 
+{% block PictureFormType_label %}
+{% endblock %}
+
+
 {% block _edit_trick_form_mainPicture_row %}
-    {{ form_label(form) }}
+    {# {{ form_label(form) }} #}
     {{ form_errors(form) }}
-    <img style="width: 30%" src="/{{ data }}" alt="" id="main-pic">
+    {#     <img style="width: 30%" src="/{{ data }}" alt="" id="main-pic">   #}
+
+    <div class="mainPictureContainer">
+        <img src="/{{ data }}" href="/{{ data }}" id="main-pic" class="img-fluid test-popup-link" alt="">
+            <div class="top-right">
+                    <button id="edit-main-picture" class="edit" type="submit"><i class="fas fa-pen"></i></button>
+                <button class="btn delete-main-picture" value="#"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        <div class="centered"><h2>titre</h2></div>
+    </div>
+
     {{ form_widget(form) }}
+{% endblock %}
+
+{% block _edit_trick_form_mainPicture_widget %}
+<div id="form_image" class="form_images" onclick="off()">
+    <div id="form_image_container">
+
+        {#
+
+           {% for choice in form.vars.choices %}
+            {% if choice.attr is defined %}
+                {% set transformPicUrl = 'images/' ~ choice.data.url %}
+
+                <div class="form_image">
+                    <label for="{{ choice.data.id }}">
+                        <img src="{{ asset(choice.attr["data-img-src"]) }}" style="width: 250px; height: 150px" class="mainPicturePicker">
+                    </label>
+                    <input
+                            type="radio"
+                            id="{{ choice.data.id }}"
+                            name="{{ choice.data.filename }}"
+                            value="{{ choice.attr["data-img-src"] }}"
+                            {% if transformPicUrl == form.vars.data %}checked{% endif %}
+                    >
+                </div>
+            {% endif %}
+        {% endfor %}
+
+
+        #}
+    </div>
+</div>
+    {{ form_widget(form) }}
+{% endblock %}
+
+{% block _edit_trick_form_videos_row %}
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
+    {{ form_label(form) }}
+{% endblock %}
+
+{% block VideoFormType_widget %}
+    <div id="{{ form.vars.id }}">
+            {% if data.url is defined %}
+                <div>
+                    <iframe src="http://www.youtube.com/embed/{{ data.identif }}?autoplay=0"
+                            frameborder="0" id="iframe_{{ form.vars.id }}"></iframe>
+                </div>
+
+                <label for="{{ form.url.vars.id }}" class="required video-label">                    <i class="fas fa-pen"></i>
+                </label>
+                <button class="btn delete collection-remove edit_trick_form_videos-collection-remove edit_trick_form_videos-collection-action"><i class="fas fa-trash-alt"></i></button>
+                <input type="text" id="{{ form.url.vars.id }}" name="{{ form.url.vars.full_name }}" class="video-input" required="required" inputmode="url" value="{{ data.url }}" style="display: none;" />
+                {% else %}
+                    <input type="text" id="{{ form.url.vars.id }}" name="{{ form.url.vars.full_name }}" class="video-input" required="required" inputmode="url" value="" />
+                    <input type="button" value="Ajouter" name="{{ form.url.vars.id }}" class="video-button"/>
+            {% endif %}
+        </div>
+{% endblock %}
+{% block VideoFormType_label %}
 {% endblock %}

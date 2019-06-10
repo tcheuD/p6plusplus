@@ -56,6 +56,13 @@ class EditTrickFormType extends AbstractType
                 'choice_label' => function(Picture $picture) {
                     return sprintf($picture->getUrl());
                 },
+                'choice_attr' => function(Picture $picture) {
+                    return ['class' => sprintf($picture->getUrl())];
+                    //return ['data-img-src' => sprintf($picture->getUrl())];
+                },
+                //'choice_attr' => function(Picture $picture) {
+                //    return ['data-img-src' => sprintf($picture->getUrl())];
+                //},
                 'choices' => $options['data']->getPictures(),
                 'attr' => ['class' => 'save'],
             ])
@@ -68,7 +75,6 @@ class EditTrickFormType extends AbstractType
                 'allow_add'     => true,
                 'allow_delete'  => true,
                 'by_reference'  => true,
-                'label' => 'Images',
                 //'mapped' => false,
                 'attr'          => [
                     'class' => 'collection-pictures',
@@ -131,8 +137,14 @@ class EditTrickFormType extends AbstractType
         'choice_label' => function(Picture $picture) {
             return sprintf($picture->getUrl());
         },
+        'choice_attr' => function(Picture $picture) {
+            return [
+                'data-img-src' => '/images/'.sprintf($picture->getUrl()),
+                'data-img-class' => 'test',
+                ];
+        },
         'choices' => $picture,
-        'attr' => ['class' => 'save'],
+        'attr' => ['class' => 'save image-picker'],
     ]);
 
     }

@@ -1,4 +1,6 @@
-$('.delete').on('click', function(){
+$('.delete').on('click', function(e){
+
+    e.preventDefault();
 
     var slug = $(this).val();
 
@@ -16,7 +18,7 @@ $('.delete').on('click', function(){
                         data: {slug: slug},
                         success: function () {
                             $.alert('La figure a bien été supprimée');
-                            location.reload();
+                            $(location).attr('href','/')
                         },
                     });
                 }
