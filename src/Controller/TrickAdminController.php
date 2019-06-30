@@ -9,6 +9,8 @@ use App\Form\EditTrickFormType;
 use App\Form\Handler\AddTrickHandler;
 use App\Form\Handler\EditTrickHandler;
 use App\Form\TrickFormType;
+use App\Repository\PictureRepository;
+use App\Repository\TrickRepository;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -33,15 +35,15 @@ class TrickAdminController extends BaseController
     public function new(EntityManagerInterface $em, Request $request, FileUploader $fileUploader)
     {
 
-        $trick = new Trick();
-
-        $form = $this->createForm(TrickFormType::class, $trick );
+        $form = $this->createForm(TrickFormType::class);
         $form->handleRequest($request);
 
         $trickHandler = new AddTrickHandler();
 
-        if ($trickHandler->handle($form, $trick, $this->getUser(), $fileUploader))
+        $trick = $trickHandler->handle($form, $this->getUser(), $fileUploader);
+        if ($trick)
         {
+
             $em->persist($trick);
             $em->flush();
 
@@ -151,29 +153,34 @@ class TrickAdminController extends BaseController
     /**
      * @Route("/ajax", name="app_ajax")
      */
-    public function ajax(Request $request, FileUploader $fileUploader, EntityManagerInterface $em)
+    public function ajax(Request $request, FileUploader $fileUploader, EntityManagerInterface $em, PictureRepository $pictureRepository, TrickRepository $trickRepository)
     {
 
         if ($request->isXmlHttpRequest()){
 
-            $picture = $this->getDoctrine()
-                ->getRepository(Picture::class)
-                ->findOneById($request->request->get('picId'));
-
+            $trick = $trickRepository->findBySlug($request->request->get('trickSlug'));
 
             $file = $request->files->get('file');
             $filename = $fileUploader->upload($file);
 
-            if ($picture) {
+            $picture = new Picture();
                 $picture->setAuthor($this->getUser());
                 $picture->setUrl($filename);
                 $picture->setCreationDate(new \DateTime());
                 $picture->setFilename($file->getClientOriginalName());
+                $picture->setNumber(1);
+                if ($trick) {
+                $picture->addTrick($trick);
+                    $em->persist($picture);
+                    $em->flush();
+                }
+                else {
+                    $em->persist($picture);
+                }
 
-                $em->persist($picture);
-                $em->flush();
-            }
+                dump($picture);
 
+            //$pictures = $trick->getPictures()->toArray();
 
             return new JsonResponse($filename);
         }
