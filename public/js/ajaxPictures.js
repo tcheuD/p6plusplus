@@ -3,6 +3,7 @@ $(document).on('change', '.pic', function()
     var file_data = $(this).prop('files')[0];
     var reader = new FileReader();
     var div = $(this).parents();
+    var trickSlug = $('.delete-trick').val();
 
     reader.addEventListener('load', function (event)
     {
@@ -20,6 +21,7 @@ $(document).on('change', '.pic', function()
         var data = new FormData();
         data.append('file', file_data);
         data.append('picId', picId);
+        data.append('trickSlug', trickSlug);
 
     }
     $.ajax({
@@ -32,12 +34,12 @@ $(document).on('change', '.pic', function()
         async: true,
         success: function (data)
         {
+            console.log(data);
+
             $( '#pic' ).text(data.pic);
             div[2].children[0].src = "/images/"+data;
-            console.log(div[2].children[0]);
 
             var position =  div[2].children[1].id;
-            console.log(position);
             var numbers = position.match(/\d+/g).map(Number); // return the pic's position
             var numbers = numbers[0];
             var picFieldInMainPicture = $('.save option[value="'+ [numbers] +'"]');
@@ -46,17 +48,38 @@ $(document).on('change', '.pic', function()
                 picFieldInMainPicture[0].innerHTML = data;
                 picFieldInMainPicture[0].attributes[1].value = "/images/"+data;
             } else {
-                var lastSelectOptionValue = $('#edit_trick_form_mainPicture option:last-child').val();
+                if ($('#edit_trick_form_mainPicture').length) {
+                    var lastSelectOptionValue = $('#edit_trick_form_mainPicture option:last-child').val();
+
+                } else {
+                    var lastSelectOptionValue = $('#trick_form_mainPicture option:last-child').val();
+                }
+                
+                if (lastSelectOptionValue == null) {
+                    lastSelectOptionValue = -1;
+                }
                 lastSelectOptionValue = parseInt(lastSelectOptionValue);
                 var newSelectOptionValue = lastSelectOptionValue + 1;
 
-                $('.save').append('<option value="'+ newSelectOptionValue +'" data-img-src="/images/'+data+'">'+data+'</option>');
+                $('.save').append('<option value="'+ newSelectOptionValue +'" data-img-src="/images/'+data+'" data-img-class="test">'+data+'</option>');
+
+                if ( newSelectOptionValue == 0) {
+                    initMainPic();
+                    $('#mainPictureContainer').show();
+                }
             }
         }
     })
 });
 
 $('#edit_trick_form_mainPicture').on('change', function(){
+
+    var url = $(this).children("option:selected").text();
+    var img = $('#main-pic').attr("src", "/images/"+url);
+
+});
+
+$('#trick_form_mainPicture').on('change', function(){
 
     var url = $(this).children("option:selected").text();
     var img = $('#main-pic').attr("src", "/images/"+url);

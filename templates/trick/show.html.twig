@@ -12,7 +12,7 @@
                 <form action="{{ path('edit_trick', {slug: trick.slug}) }}">
                     <button class="edit" type="submit"><i class="fas fa-pen"></i></button>
                 </form>
-                <button class="btn delete" value="{{ trick.slug }}"><i class="fas fa-trash-alt"></i></button>
+                <button class="btn delete delete-trick" value="{{ trick.slug }}"><i class="fas fa-trash-alt"></i></button>
             </div>
             {% endif %}
             <div class="centered"><h2>{{ trick.title }}</h2></div>

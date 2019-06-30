@@ -9,10 +9,14 @@ use App\Entity\Trick;
 use App\Repository\PictureRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TrickFormType extends AbstractType
@@ -36,20 +40,30 @@ class TrickFormType extends AbstractType
                 'label' => 'Description'
             ])
 
-            /**
-            ->add('pictures', EntityType::class, [
-                'class' => Picture::class,
-                'label' => 'Photos',
-                'multiple' => true,
-                'choice_label' => function(Picture $picture) {
-                    return sprintf($picture->getImagePath());
-                },
-               'choices' => $this->pictureRepository->findAll(),
+            ->add('mainPicture', ChoiceType::class, [
+                'label' => 'Image principale',
+                'choices' => null,
+                'attr' => ['class' => 'save'],
+                //'mapped' => false
             ])
-             **/
 
-            ->add('mainPicture', PictureFormType::class, [
-                'label' => 'Image principale'
+            ->add('category', EntityType::class, [
+                'class' => Category::class,
+                'label' => 'Categorie'
+            ])
+
+            ->add('videos', CollectionType::class, [
+                'entry_type' => VideoFormType::class,
+                'entry_options' => ['label' => true],
+                'prototype' => true,
+                'required' => false,
+                'allow_add'     => true,
+                'allow_delete'  => true,
+                'by_reference'  => true,
+                'label' => 'Videos',
+                'attr'          => [
+                    'class' => 'collection-videos',
+                ],
             ])
 
             ->add('pictures', CollectionType::class, [
@@ -67,25 +81,70 @@ class TrickFormType extends AbstractType
                 ],
             ])
 
+            ->addEventListener(
+                FormEvents::PRE_SUBMIT,
+                function (FormEvent $event) {
+                    /** @var Trick|null $data **/
+                    $data = $event->getData();
+                    dump($data);
+                    if (!isset($data['pictures'])) {
+                        return;
+                    }
+                    $this->setupSpecificLocationNameField(
+                        $event->getForm(),
+                        $data['pictures']
+                    );
+                }
+            )
+             /**
+             * ->addEventListener(
+            FormEvents::PRE_SUBMIT,
+            function (FormEvent $event) {
+            /** @var Trick|null $data **
+        $data = $event->getData();
+        dump($data);
+        if (!$data) {
+            return;
+        }
+        $this->setupSpecificLocationNameField(
+            $event->getForm(),
+            $data->getPictures()
+        );
+    }
+);
+             *
+             *
+             */ ->get('mainPicture')->addEventListener(
+                FormEvents::PRE_SUBMIT, //presubmit
+                function(FormEvent $event) {
+                    $form = $event->getForm();
+                    dump($event->getData());
+                    $this->setupSpecificLocationNameField(
+                        $form->getParent(),
+                        $event->getData()
+                    );
+                }
+            );
+    }
 
-            ->add('category', EntityType::class, [
-                'class' => Category::class,
-                'label' => 'Categorie'
-            ])
+    private function setupSpecificLocationNameField(FormInterface $form, $picture)
+    {
 
-            ->add('videos', CollectionType::class, [
-                'entry_type' => VideoFormType::class,
-                'entry_options' => ['label' => true],
-                'prototype' => true,
-                'required' => true,
-                'allow_add'     => true,
-                'allow_delete'  => true,
-                'by_reference'  => true,
-                'label' => 'Videos',
-                'attr'          => [
-                    'class' => 'collection-videos',
-                ],
-            ]);
+        if (null === $picture) {
+            $form->remove('specificLocationName');
+            return;
+        }
+
+        dump(array_keys($picture));
+
+        $picture = array_keys($picture);
+
+        $form->add('mainPicture', ChoiceType::class, [
+            'label' => 'Image principale',
+            'choices' => $picture,
+            'attr' => ['class' => 'save image-picker'],
+            //'mapped' => false
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

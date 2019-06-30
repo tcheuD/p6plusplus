@@ -13,19 +13,17 @@ use Symfony\Component\Form\FormInterface;
 class AddTrickHandler
 {
 
-    public function handle(FormInterface $form,  Trick $trick, $user, FileUploader $fileUploader)
+    public function handle(FormInterface $form,  $user, FileUploader $fileUploader)
     {
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             $videoIdExtractor = new VideoIdExtractor();
             $slugBuilder = new SlugBuilder();
-
             $trick = $form->getData();
 
             $trick->setSlug($slugBuilder->buildSlug($trick->getTitle()));
             $trick->setCreatedBy($user);
-            $trick->setMainPicture('images/'.$fileUploader->upload($form['mainPicture']['url']->getData()));
-
 
             $videosCollection = $form->getData()->getVideos()->toArray();
             foreach ($videosCollection as $b => $video) {
@@ -49,11 +47,15 @@ class AddTrickHandler
                 $picture->setAuthor($trick->getCreatedBy());
                 $picture->addTrick($trick);
                 $picture->setUrl($filename);
-                $picture->setNumber(1);
+                $picture->setNumber($b);
                 $picture->setCreationDate(new \DateTime());
+
+                if ($b === intval($trick->getMainPicture())) {
+                    $trick->setMainPicture('images/'.$filename);
+                }
             }
 
-            return true;
+            return $trick;
         }
 
         return false;

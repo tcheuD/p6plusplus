@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Form;
 
 use App\Entity\Category;
@@ -56,29 +55,21 @@ class EditTrickFormType extends AbstractType
                 'choice_label' => function(Picture $picture) {
                     return sprintf($picture->getUrl());
                 },
-                'choice_attr' => function(Picture $picture) {
-                    return ['class' => sprintf($picture->getUrl())];
-                    //return ['data-img-src' => sprintf($picture->getUrl())];
-                },
-                //'choice_attr' => function(Picture $picture) {
-                //    return ['data-img-src' => sprintf($picture->getUrl())];
+              //  'choice_attr' => function(Picture $picture) {
+                //    return ['class' => sprintf($picture->getUrl())];
+//return ['data-img-src' => sprintf($picture->getUrl())];
                 //},
+//'choice_attr' => function(Picture $picture) {
+//    return ['data-img-src' => sprintf($picture->getUrl())];
+//},
+                'choice_attr' => function(Picture $picture) {
+                    return [
+                        'data-img-src' => '/images/'.sprintf($picture->getUrl()),
+                    ];
+                },
                 'choices' => $options['data']->getPictures(),
                 'attr' => ['class' => 'save'],
-            ])
-
-            ->add('pictures', CollectionType::class, [
-                'entry_type' => PictureFormType::class,
-                'entry_options' => ['label' => true],
-                'prototype' => true,
-                'required' => false,
-                'allow_add'     => true,
-                'allow_delete'  => true,
-                'by_reference'  => true,
-                //'mapped' => false,
-                'attr'          => [
-                    'class' => 'collection-pictures',
-                ],
+                //'mapped' => false
             ])
 
             ->add('videos', CollectionType::class, [
@@ -90,9 +81,23 @@ class EditTrickFormType extends AbstractType
                 'allow_delete'  => true,
                 'by_reference'  => true,
                 'label' => 'Videos',
-                //'mapped' => false,
+//'mapped' => false,
                 'attr'          => [
                     'class' => 'collection-videos',
+                ],
+            ])
+
+            ->add('pictures', CollectionType::class, [
+                'entry_type' => PictureFormType::class,
+                'entry_options' => ['label' => true],
+                'prototype' => true,
+                'required' => false,
+                'allow_add'     => true,
+                'allow_delete'  => true,
+                'by_reference'  => true,
+//'mapped' => false,
+                'attr'          => [
+                    'class' => 'collection-pictures',
                 ],
             ])
 
@@ -101,7 +106,6 @@ class EditTrickFormType extends AbstractType
                 function (FormEvent $event) {
                     /** @var Trick|null $data **/
                     $data = $event->getData();
-
                     if (!$data) {
                         return;
                     }
@@ -111,10 +115,10 @@ class EditTrickFormType extends AbstractType
                     );
                 }
             )
-
             ->get('mainPicture')->addEventListener(
                 FormEvents::POST_SUBMIT,
                 function(FormEvent $event) {
+                    dd($event);
                     $form = $event->getForm();
                     $this->setupSpecificLocationNameField(
                         $form->getParent(),
@@ -127,26 +131,25 @@ class EditTrickFormType extends AbstractType
     private function setupSpecificLocationNameField(FormInterface $form, $picture)
     {
 
-            if (null === $picture) {
+        if (null === $picture) {
             $form->remove('specificLocationName');
             return;
         }
 
+        $picture = $picture->toArray();
         $form->add('mainPicture', ChoiceType::class, [
-        'label' => 'Image principale',
-        'choice_label' => function(Picture $picture) {
-            return sprintf($picture->getUrl());
-        },
-        'choice_attr' => function(Picture $picture) {
-            return [
-                'data-img-src' => '/images/'.sprintf($picture->getUrl()),
-                'data-img-class' => 'test',
+            'label' => 'Image principale',
+            'choice_label' => function(Picture $picture) {
+                return sprintf($picture->getUrl());
+            },
+            'choice_attr' => function(Picture $picture) {
+                return [
+                    'data-img-src' => '/images/'.sprintf($picture->getUrl()),
                 ];
-        },
-        'choices' => $picture,
-        'attr' => ['class' => 'save image-picker'],
-    ]);
-
+            },
+            'choices' => $picture,
+            'attr' => ['class' => 'save image-picker'],
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

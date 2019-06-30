@@ -3425,8 +3425,8 @@ input, select, textarea {
 	width: 150px;
 }
 
-#edit_trick_form_mainPicture {
-	/*display: none;*/
+#edit_trick_form_mainPicture, #trick_form_mainPicture {
+	display: none;
 }
 
 #edit_trick_pictures_container {
@@ -3440,7 +3440,7 @@ input, select, textarea {
 	flex-wrap: wrap;
 }
 
-#edit_trick_form_pictures, #edit_trick_form_videos {
+#edit_trick_form_pictures, #edit_trick_form_videos, #trick_form_videos, #trick_form_pictures {
 	display: contents;
 }
 #edit_trick_form_videos:first-child {
@@ -3474,6 +3474,25 @@ input, select, textarea {
 	justify-content: center;
 	flex-wrap: wrap;
 	margin-top: 15%;
+}
+
+.trick_form_pictures-collection-rescue-add, .trick_form_videos-collection-rescue-add {
+	background: black;
+	color: white;
+	padding: 10px 20px;
+	display: inline-table;
+	margin-block-start: auto;
+}
+
+#mainPictureContainer {
+	display: none;
+	margin-bottom: 3em;
+	background-color: aliceblue;
+	border-bottom: 6px solid lightblue;
+}
+
+.x-large {
+	font-size: x-large;
 }
 
 																																					 }

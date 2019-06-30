@@ -27,7 +27,7 @@
     {{ form_row(trickForm.content) }}
     {{ form_row(trickForm.category) }}
             <button type="submit">Modifier</button>
-            <button class="btn delete" value="{{ trick.slug }}">Supprimer</button>
+            <button class="btn delete-trick" value="{{ trick.slug }}">Supprimer</button>
     {{ form_end(trickForm) }}
 
         </section>
@@ -41,7 +41,7 @@
     <script src="{{ asset('js/image-picker.js') }}"></script>
     <script type="text/javascript">
 
-        initMainPic();
+        //initMainPic();
 
         function initMainPic() {
             var selectMainPic = document.getElementById("edit_trick_form_mainPicture");

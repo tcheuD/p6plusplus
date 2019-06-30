@@ -1,4 +1,4 @@
-$('.delete').on('click', function(e){
+$('.delete-trick').on('click', function(e){
 
     e.preventDefault();
 

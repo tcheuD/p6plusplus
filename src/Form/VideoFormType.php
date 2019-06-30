@@ -21,4 +21,9 @@ class VideoFormType extends AbstractType
             'data_class' => Video::class
         ]);
     }
+
+    public function getBlockPrefix()
+    {
+        return 'VideoFormType';
+    }
 }
