@@ -47,28 +47,41 @@ $(document).ready(function(){
                             section.appendChild(imgLink);
                             imgLink.appendChild(img);
 
-                            div.appendChild(header);
-                            header.appendChild(h3);
-                            h3.appendChild(titleLink);
+                            section.appendChild(header);
+                            header.appendChild(titleLink);
 
                             var isAuthenticated = $('.js-user-rating').data('isAuthenticated');
                             if (isAuthenticated) {
+
                                 var routeEditTrick = "/trick/edit/" + data.slug + "/";
                                 var routeDeleteTrick = data.slug;
-                                //routeEditTrick = routeEditTrick.replace('trick_slug', data.slug);
-                                //routeDeleteTrick = routeDeleteTrick.replace('trick_slug', data.slug);
 
-                                var editTrickLink = document.createElement('a');
-                                editTrickLink.setAttribute('href', routeEditTrick);
-                                editTrickLink.textContent = "Modifier";
+                                var divIcon = document.createElement('div');
+                                divIcon.setAttribute('class', "icon-index");
 
-                                var deleteTrickLink = document.createElement('button');
-                                deleteTrickLink.setAttribute('value', routeDeleteTrick);
-                                deleteTrickLink.setAttribute('class', 'delete');
-                                deleteTrickLink.textContent = "Supprimer";
+                                var formEdit = document.createElement('form');
+                                formEdit.setAttribute('action', "/trick/edit/" + data.slug + "/");
 
-                                header.appendChild(editTrickLink);
-                                header.appendChild(deleteTrickLink);
+                                var btnEdit = document.createElement('button');
+                                btnEdit.setAttribute('class', 'edit');
+                                btnEdit.setAttribute('type', 'submit');
+
+                                var iEdit = document.createElement('i');
+                                iEdit.setAttribute('class', 'fas fa-pen');
+
+                                var btnDelete = document.createElement('button');
+                                btnDelete.setAttribute('class', 'btn delete delete-trick');
+                                btnDelete.setAttribute('value', data.slug);
+
+                                var iDelete = document.createElement('i');
+                                iDelete.setAttribute('class', 'fas fa-trash-alt');
+
+                              divIcon.appendChild(formEdit);
+                              divIcon.appendChild(btnDelete);
+                              formEdit.appendChild(btnEdit);
+                              btnEdit.appendChild(iEdit);
+                              btnDelete.appendChild(iDelete);
+                              header.appendChild(divIcon);
                             }
 
                             newRow.appendChild(div);
@@ -77,20 +90,21 @@ $(document).ready(function(){
 
                         var rowno = row + rowperpage;
 
+                            document.getElementById("back-to-top").style.display = "block";
+
                         // checking row value is greater than allcount or not
                         if (rowno > allcount) {
 
                             // Change the text and background
-                            $('.load-more').text("Hide");
-                            $('.load-more').css("background", "darkorchid");
+                            $('.load-more').text("Voir moins");
                         } else {
-                            $(".load-more").text("Load more");
+                            $(".load-more").text("Voir plus");
                         }
                     }, 500);
                 },
             });
         }else{
-            $('.load-more').text("Loading...");
+            $('.load-more').text("Chargement...");
 
             // Setting little delay while removing contents
             setTimeout(function() {
@@ -102,9 +116,8 @@ $(document).ready(function(){
                 $("#row").val(0);
 
                 // Change the text and background
-                $('.load-more').text("Load more");
-                $('.load-more').css("background","#15a9ce");
-
+                $('.load-more').text("Voir plus");
+                document.getElementById("back-to-top").style.display = "none";
             }, 2000);
 
 

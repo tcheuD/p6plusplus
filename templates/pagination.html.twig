@@ -2,13 +2,13 @@
     <ul class="pagination">
         {% if pagination.page > 1 %}
             <li>
-                <a href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'slug': trick.slug, 'page': 1})) }}">
+                <a href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'slug': trick.slug, 'page': 1})) }} " class="comment_pagination">
                     <<
                 </a>
             </li>
             <li>
                 <a href="{{ path(pagination.nomRoute,
-                    pagination.paramsRoute|merge({'slug':trick.slug, 'page': pagination.page-1})) }}">
+                    pagination.paramsRoute|merge({'slug':trick.slug, 'page': pagination.page-1})) }}" class="comment_pagination">
                     <
                 </a>
             </li>
@@ -26,13 +26,13 @@
         {% if pagination.page < pagination.nbPages %}
             <li>
                 <a href="{{ path(pagination.nomRoute,
-                    pagination.paramsRoute|merge({'slug': trick.slug, 'page': pagination.page+1})) }}">
+                    pagination.paramsRoute|merge({'slug': trick.slug, 'page': pagination.page+1})) }}" class="comment_pagination">
                     >
                 </a>
             </li>
             <li>
                 <a href="{{ path(pagination.nomRoute,
-                    pagination.paramsRoute|merge({'slug' :trick.slug, 'page': pagination.nbPages})) }}">
+                    pagination.paramsRoute|merge({'slug' :trick.slug, 'page': pagination.nbPages})) }}" class="comment_pagination">
                     >>
                 </a>
             </li>

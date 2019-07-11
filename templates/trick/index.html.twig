@@ -9,12 +9,10 @@
             <header>
                 <h2>SnowTricks</h2>
             </header>
-            <p>Rush <strong>B</strong> cyka
-                <br />
-                <br />
+            <p><strong>Site communautaire de snowboard</strong></p>
                 <footer>
                     <ul class="buttons stacked">
-                        <li><a href="#main" class="button fit scrolly">Alright kurwa</a></li>
+                        <li><a href="#main" class="button fit scrolly">Voir les figures</a></li>
                     </ul>
                 </footer>
 
@@ -23,15 +21,6 @@
 
     <section class="wrapper style3 container special" id="main">
     {% for trick in tricks %}
-        {# <div>
-            <a href="{{ path('show_trick', {slug: trick.slug, page: '1'}) }}">
-                <p>{{ trick.title }}</p> </a>
-            {% if is_granted('ROLE_USER') %}
-                <a href="{{ path('edit_trick', {slug: trick.slug}) }}">Modifier</a>
-                <a href="{{ path('delete_trick', {slug: trick.slug}) }}">Supprimer</a>
-            {% endif %}
-            <img style="width: 10%" src="{{ asset(trick.mainPicturePath) }}" alt="">
-        </div> #}
 
         {% if loop.index0 is divisible by(5) %}
             <div class="row">
@@ -60,7 +49,10 @@
     {% endfor %}
         <footer class="major">
             <ul class="buttons">
-                <li><a href="#" class="button load-more">See More</a></li>
+                {% if numberOfTricks > 15 %}
+                <li><a href="#" class="button load-more">Voir plus</a></li>
+                {% endif %}
+                <a href="#main" id="back-to-top"><li class="fas fa-arrow-up"></li></a>
                 <input type="hidden" id="row" value="0">
                 <input type="hidden" id="all" value="{{ numberOfTricks }}">
             </ul>
