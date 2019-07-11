@@ -25,8 +25,9 @@ class EditTrickHandler
             $trick = $form->getData();
 
             $trick->setSlug($slugBuilder->buildSlug($trick->getTitle()));
-            $trick->setCreatedBy($user);
+            $trick->setUpdatedBy($user);
             $trick->setMainPicture($mainPicture);
+            $trick->setModificationDate(new \DateTime());
 
 
             $videosCollection = $form->getData()->getVideos()->toArray();

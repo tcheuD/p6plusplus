@@ -3,6 +3,9 @@
 {% block body_class %}<body class="no-sidebar is-preload">{% endblock %}
 {% block header_class %}<header id="header">{% endblock %}
 {% block body %}
+{% form_theme commentForm
+        'showTrickFormTheme.html.twig'
+    %}
 <article id="main">
     <section class="wrapper style4 container">
         <div class="mainPictureContainer">
@@ -19,36 +22,6 @@
         </div>
         <div class="content" id="content-trick">
 
-            {# {% for picture in trick.pictures %}
-    <img style="width:25%" src="{{ asset(picture.imagePath) }}" alt="">
-{% endfor %} #}
-
-            {#
-             {% for picture in trick.pictures %}
-            {% if loop.index0 is divisible by(6) %}
-            <div class="row">
-                {% endif %}
-                <div class="col-2 col-12-narrower">
-
-                    <section>
-                        <img style="max-width: 100%" src="{{ asset(picture.imagePath) }}" alt="">
-                    </section>
-
-                </div>
-                {% if loop.index is divisible by(6) or loop.last %}
-            </div>
-            {% endif %}
-            {% endfor %}
-
-<div>
-    {% for video in trick.videos %}
-        <iframe width="640" height="360"
-                src="http://www.youtube.com/embed/{{ video.identif }}?autoplay=0"
-                frameborder="0"></iframe>
-    {% endfor %}
-</div>
-            #}
-
                 {% for picture in trick.pictures %}
                     <div>
                         <img style="width: 250px; height: 150px" src="{{ asset(picture.imagePath) }}" alt="">
@@ -63,14 +36,19 @@
 
             </div>
 
-        <p>
-            {{ trick.content }}
-        </p>
+                            {{ trick.content }}
+            <div class="trick-infos">
+                Categorie : {{ trick.category }} créé le : {{ trick.creationDate|date('Y-m-d') }} par : {{ trick.createdBy.firstname }} {{ trick.createdBy.name }}
+                {% if trick.modificationDate is not null %}
+                Modifié le {{ trick.modificationDate|date('Y-m-d') }} par {{ trick.updatedBy.firstname }} {{ trick.updatedBy.name }}
+                {% endif %}
 
-<div class="comments">
-<h3>Commentaires : </h3>
+            </div>
+
 
 {% if is_granted('ROLE_USER') %}
+<div class="comments" id="comment-container">
+
     {{ form_start(commentForm) }}
     {{ form_widget(commentForm) }}
 
@@ -78,18 +56,20 @@
         Ajouter un commentaire
     </button>
     {{ form_end(commentForm) }}
+    </div>
 {% endif %}
+<div class="box">
+
 {% for comment in comments %}
             <div class="row-show">
     <div class="circular--landscape">
     <img src="{{ asset(comment.user.picturePath) }}" alt="">
     </div>
-    <b>{{ comment.comment }}</b>
+    <b class="comment_content">{{ comment.comment }}</b>
     {{ comment.user.firstname }} {{ comment.user.name }} le {{ comment.commentDate|date('Y-m-d') }}
     </div>
 {% endfor %}
-
-{% include 'pagination.html.twig' %}
+        {% include 'pagination.html.twig' %}
 </div>
 
     </section>

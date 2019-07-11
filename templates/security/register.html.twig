@@ -1,8 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Inscription{% endblock %}
+{% block body_class %}<body class="contact">{% endblock %}
+{% block header_class %}<header id="header">{% endblock %}
 
 {% block body %}
+    <article id="main">
+        <header class="special container">
+            <h2>Inscription</h2>
+        </header>
+
+        <section class="wrapper style4 special container medium">
 
     {{ form_start(registrationForm) }}
         {{ form_widget(registrationForm) }}
@@ -21,4 +29,6 @@
                 </label>
             </div>
         #}
+        </section>
+        </article>
 {% endblock %}
