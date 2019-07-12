@@ -116,6 +116,10 @@ class SecurityController extends BaseController
                 ;
 
             $mailer->send($message);
+
+            $this->addFlash('success', 'Un mail de réinitialisation vous a été envoyé');
+            return $this->redirectToRoute('app_homepage');
+
         }
 
 
