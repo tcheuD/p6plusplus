@@ -33,7 +33,9 @@ $(document).ready(function(){
                             var section = document.createElement('section');
                             var imgLink = document.createElement('a');
                             imgLink.setAttribute('href', "trick/" + data.slug + "/1");
-                            imgLink.setAttribute('class', 'image featured');
+                            var divImg = document.createElement('div');
+                            divImg.setAttribute('class', "index_img image");
+                            divImg.setAttribute('style', "background-image:url("+data.mainPicture+")");
                             var img = document.createElement('img');
                             img.setAttribute('src', data.mainPicture);
                             var header = document.createElement('header');
@@ -45,7 +47,8 @@ $(document).ready(function(){
 
                             div.appendChild(section);
                             section.appendChild(imgLink);
-                            imgLink.appendChild(img);
+                            imgLink.appendChild(divImg);
+                            divImg.appendChild(img);
 
                             section.appendChild(header);
                             header.appendChild(titleLink);
@@ -123,6 +126,9 @@ $(document).ready(function(){
 
         }
 
+    });
+
+    $("#back-to-top").click(function () {
     });
 
 });

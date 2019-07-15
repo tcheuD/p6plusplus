@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Home sweet home{% endblock %}
+{% block title %}SnowTricks{% endblock %}
 
 {% block body %}
     <section id="banner">
@@ -9,7 +9,7 @@
             <header>
                 <h2>SnowTricks</h2>
             </header>
-            <p><strong>Site communautaire de snowboard</strong></p>
+            <p><strong>Communauté de figures de snowboard</strong></p>
                 <footer>
                     <ul class="buttons stacked">
                         <li><a href="#main" class="button fit scrolly">Voir les figures</a></li>
@@ -28,7 +28,15 @@
         <div class="col-2 col-12-narrower">
 
             <section>
-                <a href="{{ path('show_trick', {slug: trick.slug, page: '1'}) }}" class="image featured"><img style="max-width: 100%; max-height: 130px" src="{{ asset(trick.mainPicturePath) }}" alt="" /></a>
+
+                <a href="{{ path('show_trick', {slug: trick.slug, page: '1'}) }}">
+                <div class="index_img image" style="background-image:url({{ asset(trick.mainPicturePath) }})">
+
+                <img src="{{ asset(trick.mainPicturePath) }}" alt="" />
+
+                </div>
+                </a>
+
                 <header>
                     <a href="{{ path('show_trick', {slug: trick.slug, page: '1'}) }}">{{ trick.title }}</a>
                     {% if is_granted('ROLE_USER') %}
