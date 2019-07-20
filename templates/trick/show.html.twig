@@ -38,16 +38,19 @@
 
                             {{ trick.content }}
             <div class="trick-infos">
-                Categorie : {{ trick.category }} créé le : {{ trick.creationDate|date('Y-m-d') }} par : {{ trick.createdBy.firstname }} {{ trick.createdBy.name }}
+                <span class="label category">Categorie : {{ trick.category }}</span> <span class="label creation_date">créé le : {{ trick.creationDate|date('d-m-Y') }}</span> <span class="label author">par : {{ trick.createdBy.firstname }} {{ trick.createdBy.name }}</span>
                 {% if trick.modificationDate is not null %}
-                Modifié le {{ trick.modificationDate|date('Y-m-d') }} par {{ trick.updatedBy.firstname }} {{ trick.updatedBy.name }}
+                <span class="label modification_date">
+                    Modifié le {{ trick.modificationDate|date('d-m-Y') }}</span>
+                    <span class="label autor_modification">par :{{ trick.updatedBy.firstname }} {{ trick.updatedBy.name }}
+                </span>
                 {% endif %}
 
             </div>
 
+<div class="comments" id="comment-container">
 
 {% if is_granted('ROLE_USER') %}
-<div class="comments" id="comment-container">
 
     {{ form_start(commentForm) }}
     {{ form_widget(commentForm) }}
@@ -56,10 +59,18 @@
         Ajouter un commentaire
     </button>
     {{ form_end(commentForm) }}
-    </div>
-{% endif %}
-<div class="box">
 
+   {% else %}
+   <p class="no_margin"> Vous devez être connecté pour pouvoir écrire un commentaire </p>
+   <b>
+   <a href="{{ path('app_login') }}" >Connexion</a>
+   <a href="{{ path('app_register') }}" >Inscription</a>
+   </b>
+{% endif %}
+
+</div>
+<div class="box">
+{% if comments|length > 0%}
 {% for comment in comments %}
             <div class="row-show">
     <div class="circular--landscape">
@@ -72,10 +83,16 @@
         {% include 'pagination.html.twig' %}
 </div>
 
+{% else %}
+    <p>Aucun commentaire</p>
+{% endif %}
+
+
     </section>
 </article>
 {% endblock %}
     {% block javascripts %}
     {{ parent() }}
         <script src="{{ asset('js/deleteTrick.js') }}"></script>
+        <script src="{{ asset('js/showTrickMedia.js') }}"></script>
     {% endblock %}

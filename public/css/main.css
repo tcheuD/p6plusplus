@@ -3333,6 +3333,10 @@ input, select, textarea {
 	text-align: center;
 }
 
+.mainPictureContainer h2 {
+	text-shadow: 2px 2px 5px black;
+}
+
 .centered {
 	position: absolute;
 	top: 50%;
@@ -3386,17 +3390,14 @@ input, select, textarea {
 .circular--landscape {
 	display: inline-block;
 	position: relative;
-	width: 100px;
-	height: 100px;
-	overflow: hidden;
-	border-radius: 50%;
 }
 
 .circular--landscape img {
-	width: auto;
-	height: 100%;
+	width: 100px;
+	height: 100px;
 	margin-left: -50px;
 	vertical-align:baseline;
+	border-radius: 50%;
 }
 
 .row-show {
@@ -3411,10 +3412,10 @@ input, select, textarea {
 	flex-direction: column;
 	justify-content: space-evenly;
 	align-items: center;
-	border-top-width: 3px;
-	border-bottom-width: 3px;
-	border-top-style: inset;
-	border-bottom-style: inset;
+	border-top-width: 2px;
+	border-bottom-width: 2px;
+	border-top-style: solid;
+	border-bottom-style: solid;
 }
 
 .row-show b {
@@ -3537,6 +3538,12 @@ input, select, textarea {
 	overflow-wrap: break-word;
 }
 
+#comment-container {
+	padding-top: 1em;
+	padding-bottom: 1em;
+	margin-top: 1em;
+}
+
 .comment_pagination {
 	background-color: #3fb1a3;
 	padding: 0.25em;
@@ -3575,6 +3582,29 @@ input, select, textarea {
 
 .index_img img {
 	display: none;
+}
+
+.no_margin {
+	margin: 0;
+}
+
+.showTrickMediaContainer {
+    text-align: center;
+}
+
+.label {
+	color: black;
+	padding: 5px;
+	font-size: small;
+	font-weight: bolder;
+	background-color: #e7e7e7;
+	text-wrap: inherit;
+}
+
+.active a {
+	border-style: solid;
+	padding: 2px;
+	border-width: initial;
 }
 
 @media screen and (max-width: 840px) {
