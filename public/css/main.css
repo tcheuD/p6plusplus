@@ -3607,6 +3607,10 @@ input, select, textarea {
 	border-width: initial;
 }
 
+.link_register_on_login_page {
+	display: none;
+}
+
 @media screen and (max-width: 840px) {
 
 	/* pictures on mainPage */
