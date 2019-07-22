@@ -123,7 +123,10 @@
 {% block _edit_trick_form_videos_row %}
     {{ form_errors(form) }}
     {{ form_widget(form) }}
-    {{ form_label(form) }}
+{% endblock %}
+
+
+{% block VideoFormType_label %}
 {% endblock %}
 
 {% block VideoFormType_widget %}
@@ -143,6 +146,4 @@
             <input type="button" value="Ajouter" name="{{ form.url.vars.id }}" class="video-button"/>
         {% endif %}
     </div>
-{% endblock %}
-{% block VideoFormType_label %}
 {% endblock %}

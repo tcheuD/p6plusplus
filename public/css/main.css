@@ -3631,6 +3631,15 @@ input, select, textarea {
 	display: block;
 }
 
+.btn_media_edit_trick {
+	display: block;
+	margin: 1em;
+}
+
+.no_list_li {
+	list-style-type: none;
+}
+
 @media screen and (max-width: 840px) {
 
 	/* pictures on mainPage */
