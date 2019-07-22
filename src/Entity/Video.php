@@ -2,10 +2,19 @@
 
 namespace App\Entity;
 
+use App\Validator\UniqueVideo;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VideoRepository")
+ * @UniqueEntity(
+ *     fields={"identif"},
+ *     message="test"
+ * )
  */
 class Video
 {
@@ -23,6 +32,8 @@ class Video
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @UniqueVideo()
      */
     private $url;
 
@@ -37,21 +48,25 @@ class Video
     private $creationDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="videos")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $trick;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="videos")
      * @ORM\JoinColumn(nullable=false)
      */
     private $author;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $identif;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Trick", mappedBy="videos")
+     */
+    private $tricks;
+
+    public function __construct()
+    {
+        $this->tricks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -106,18 +121,6 @@ class Video
         return $this;
     }
 
-    public function getTrick(): ?Trick
-    {
-        return $this->trick;
-    }
-
-    public function setTrick(?Trick $trick): self
-    {
-        $this->trick = $trick;
-
-        return $this;
-    }
-
     public function getAuthor(): ?User
     {
         return $this->author;
@@ -147,5 +150,31 @@ class Video
         return $this->getIdentif();
     }
 
+    /**
+     * @return Collection|Trick[]
+     */
+    public function getTricks(): Collection
+    {
+        return $this->tricks;
+    }
 
+    public function addTrick(Trick $trick): self
+    {
+        if (!$this->tricks->contains($trick)) {
+            $this->tricks[] = $trick;
+            $trick->addVideo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrick(Trick $trick): self
+    {
+        if ($this->tricks->contains($trick)) {
+            $this->tricks->removeElement($trick);
+            $trick->removeVideo($this);
+        }
+
+        return $this;
+    }
 }

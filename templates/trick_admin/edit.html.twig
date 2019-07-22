@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ trick.title }}{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/image-picker.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}" />
+{% endblock %}
+{% block body_class %}<body class="no-sidebar is-preload">{% endblock %}
+{% block header_class %}<header id="header">{% endblock %}
+    {% block body %}
+    {% form_theme trickForm
+        'jquery.collection.html.twig'
+        'mediaCollectionFormTheme.html.twig'
+        'base.html.twig'
+    %}
+
+    <article id="main">
+        <section class="wrapper style4 container">
+
+    {{ form_start(trickForm) }}
+    {{ form_row(trickForm.mainPicture) }}
+            <div class="content" id="content-trick">
+    {{ form_row(trickForm.pictures) }}
+    {{ form_row(trickForm.videos) }}
+            </div>
+    {{ form_row(trickForm.title) }}
+    {{ form_row(trickForm.content) }}
+    {{ form_row(trickForm.category) }}
+            <button type="submit">Modifier</button>
+            <button class="btn delete-trick" value="{{ trick.slug }}">Supprimer</button>
+    {{ form_end(trickForm) }}
+
+        </section>
+    </article>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/ajaxPictures.js') }}"></script>
+
+    <script src="{{ asset('js/image-picker.js') }}"></script>
+    <script src="{{ asset('js/mainPicEditTrick.js') }}"></script>
+    <script src="{{ asset('js/jquery.magnific-popup.js') }}"></script>
+    <script src="{{ asset('js/videosEditTrick.js') }}"></script>
+    <script src="{{ asset('js/jquery.collection.js') }}"></script>
+    <script src="{{ asset('js/editTrickPicHandler.js') }}"></script>
+    <script src="{{ asset('js/deleteTrick.js') }}"></script>
+{% endblock %}

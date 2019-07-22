@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Trick;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method Trick|null find($id, $lockMode = null, $lockVersion = null)
@@ -56,5 +58,53 @@ class TrickRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
             ;
+    }
+
+    public function findAllAndPaginate($page, $nbMaxByPage)
+    {
+        if (!is_numeric($page)) {
+            throw new \InvalidArgumentException(
+                'La valeur de l\'argument $page est incorrecte (valeur : ' . $page . ').'
+            );
+        }
+
+        if ($page < 1) {
+            throw new NotFoundHttpException('La page demandée n\'existe pas');
+        }
+
+        if (!is_numeric($nbMaxByPage)) {
+            throw new \InvalidArgumentException(
+                'La valeur de l\'argument $nbMaxParPage est incorrecte (valeur : ' . $nbMaxByPage . ').'
+            );
+        }
+
+        $firstResult = ($page - 1) * $nbMaxByPage;
+        $qb = $this->createQueryBuilder('a')
+            ->orderBy('a.creationDate', 'DESC')
+            ->setFirstResult($firstResult)
+            ->setMaxResults($nbMaxByPage)
+            ->getQuery();
+
+        $paginator = new Paginator($qb);
+
+        if ( ($paginator->count() <= $firstResult) && $page != 1) {
+            throw new NotFoundHttpException('La page demandée n\'existe pas.'); // page 404, sauf pour la première page
+        }
+
+        return $paginator;
+    }
+
+    public function findAllCounted()
+    {
+        $queryBuilder = $this->createQueryBuilder();
+
+        $queryBuilder->select('COUNT(u.id)')
+            ->from(Trick::class, 'i');
+
+        $query = $queryBuilder->getQuery();
+
+        echo $query->getDQL(), "\n";
+        echo $query->getSingleScalarResult();
+
     }
 }

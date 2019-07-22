@@ -31,3 +31,16 @@ services:
         arguments:
             $targetDirectory: '%images_directory%'
 
+    #App\EventListener\PictureUploadListener:
+     #   tags:
+     #       - { name: doctrine.event_listener, event: prePersist }
+      #      - { name: doctrine.event_listener, event: preUpdate }
+
+    # Form extension for adding icons
+    foobar.form_extension.icon:
+        class: Foo\BarBundle\Form\Extension\ButtonTypeIconExtension
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\ButtonType }
+
+
+

@@ -1,14 +1,77 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Home sweet home{% endblock %}
+{% block title %}SnowTricks{% endblock %}
 
 {% block body %}
-    {% for trick in tricks %}
-        <div>
-            <a href="{{ path('show_trick', {slug: trick.slug}) }}">
-                <p>{{ trick.title }}</p> </a>
-            <img style="width: 10%" src="{{ asset(trick.pictures[0].imagePath) }}" alt="">
-        </div>
-    {% endfor %}
+    <section id="banner">
+        <div class="inner">
 
+            <header>
+                <h2>SnowTricks</h2>
+            </header>
+            <p><strong>Communauté de figures de snowboard</strong></p>
+                <footer>
+                    <ul class="buttons stacked">
+                        <li><a href="#main" class="button fit scrolly">Voir les figures</a></li>
+                    </ul>
+                </footer>
+
+        </div>
+    </section>
+
+    <section class="wrapper style3 container special" id="main">
+    {% for trick in tricks %}
+
+        {% if loop.index0 is divisible by(5) %}
+            <div class="row">
+        {% endif %}
+        <div class="col-2 col-12-narrower">
+
+            <section>
+
+                <a href="{{ path('show_trick', {slug: trick.slug, page: '1'}) }}">
+                <div class="index_img image" style="background-image:url({{ asset(trick.mainPicturePath) }})">
+
+                <img src="{{ asset(trick.mainPicturePath) }}" alt="" />
+
+                </div>
+                </a>
+
+                <header>
+                    <a href="{{ path('show_trick', {slug: trick.slug, page: '1'}) }}">{{ trick.title }}</a>
+                    {% if is_granted('ROLE_USER') %}
+                        <div class="icon-index">
+                            <form action="{{ path('edit_trick', {slug: trick.slug}) }}">
+                                <button class="edit" type="submit"><i class="fas fa-pen"></i></button>
+                            </form>
+                            <button class="btn delete delete-trick" value="{{ trick.slug }}"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    {% endif %}
+                </header>
+            </section>
+
+        </div>
+        {% if loop.index is divisible by(5) or loop.last %}
+            </div>
+        {% endif %}
+    {% endfor %}
+        <footer class="major">
+            <ul class="buttons">
+                {% if numberOfTricks > 15 %}
+                <li><a href="#" class="button load-more">Voir plus</a></li>
+                {% endif %}
+                <a href="#main" id="back-to-top"><li class="fas fa-arrow-up"></li></a>
+                <input type="hidden" id="row" value="0">
+                <input type="hidden" id="all" value="{{ numberOfTricks }}">
+            </ul>
+        </footer>
+        <div style="display: none" class="js-user-rating" data-is-authenticated="{{ app.user ? 'true' : 'false' }}">
+        </div>
+    </section>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/ajaxTricks.js') }}"></script>
+    <script src="{{ asset('js/deleteTrick.js') }}"></script>
 {% endblock %}

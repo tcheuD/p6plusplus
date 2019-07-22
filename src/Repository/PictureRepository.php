@@ -23,9 +23,19 @@ class PictureRepository extends ServiceEntityRepository
     public function findUnusedPicByUser()
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.trick is null')
+            ->andWhere('p.tricks is null')
             ->getQuery()
             ->getResult()
+            ;
+    }
+
+    public function findOneById($id): ?Picture
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
             ;
     }
 
