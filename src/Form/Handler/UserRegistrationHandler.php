@@ -17,7 +17,13 @@ class UserRegistrationHandler
             $user = $form->getData();
 
             $user->setRegistrationDate(new \DateTime());
-            $user->setPicture($fileUploader->upload($form['ProfilePicture']->getData()));
+            if ($form['ProfilePicture']->getData()) {
+                $user->setPicture($fileUploader->upload($form['ProfilePicture']->getData()));
+            }
+            else
+            {
+                $user->setPicture('default_pp_snowtricks.png');
+            }
             $user->setPassword($passwordEncoder->encodePassword(
                 $user,
                 $form['plainPassword']->getData()

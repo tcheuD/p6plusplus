@@ -3611,6 +3611,26 @@ input, select, textarea {
 	display: none;
 }
 
+.link_login_on_registration_page {
+	display: none;
+}
+
+#user_registration_form div {
+	margin: 1em;
+}
+
+#user_registration_form div label{
+	display: block;
+}
+
+#user_registration_form button{
+	display: block;
+}
+
+#registration_btn_div {
+	display: block;
+}
+
 @media screen and (max-width: 840px) {
 
 	/* pictures on mainPage */

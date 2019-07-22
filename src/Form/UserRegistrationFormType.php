@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class UserRegistrationFormType extends AbstractType
@@ -29,11 +30,10 @@ class UserRegistrationFormType extends AbstractType
             ])
             ->add('ProfilePicture', FileType::class, [
                 'mapped' => false,
-                'label' => 'Photo de profil',
+                'required' => false,
+                'label' => 'Photo de profil (optionnel)',
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Choisissez une photo de profil'
-                    ])
+                    new Image()
                 ]
             ])
             ->add('plainPassword', RepeatedType::class, [

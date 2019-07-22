@@ -15,9 +15,14 @@
     {{ form_start(registrationForm) }}
         {{ form_widget(registrationForm) }}
 
-        <button type="submit">
+        <div id="registration_btn_div">
+            <button type="submit">
             Inscription
-        </button>
+            </button>
+        </div>
+
+       <a href="{{ path('app_login') }}"  class="link_login_on_registration_page">Déjà inscrit ?</a>
+
     {{ form_end(registrationForm) }}
         {#
             Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
@@ -31,4 +36,8 @@
         #}
         </section>
         </article>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/register.js') }}"></script>
 {% endblock %}
