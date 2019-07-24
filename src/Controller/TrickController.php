@@ -19,6 +19,10 @@ class TrickController extends BaseController
      */
     public function showTrick($slug, $page, Request $request, EntityManagerInterface $em)
     {
+
+        //dd($request->server->get('HTTP_HOST'));
+
+
         $trick = $this->getDoctrine()
             ->getRepository(Trick::class)
             ->findBySlug($slug);
@@ -81,42 +85,4 @@ class TrickController extends BaseController
         ]);
     }
 
-    /**
-     * @Route("/ajax2", name="app_ajax2")
-     */
-    public function ajax(Request $request)
-    {
-
-        if ($request->isXmlHttpRequest()){
-
-            $lol = $request->request->get('row');
-            intval($lol);
-
-            $tricks = $this->getDoctrine()
-                ->getRepository(Trick::class)
-                ->findAllAndPaginate(2, 15 );
-
-
-            $c = count($tricks);
-            foreach ($tricks as $post) {
-                dump($post);
-            }
-
-            $jsonData = array();
-            $idx = 0;
-            /** @var  $trick Trick */
-            foreach($tricks as $trick) {
-                $temp = array(
-                    'title' => $trick->getTitle(),
-                    'mainPicture' => $trick->getMainPicture(),
-                    'slug' => $trick->getSlug(),
-                );
-                $jsonData[$idx++] = $temp;
-            }
-
-                return new JsonResponse($jsonData);
-        }
-
-        return new JsonResponse("This is not an ajax request");
-    }
 }

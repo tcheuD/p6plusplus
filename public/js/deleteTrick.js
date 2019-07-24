@@ -14,7 +14,7 @@ $(document).on('click', '.delete-trick', function (e) {
                     btnClass: 'btn-dark',
                     action: function () {
                         $.ajax({
-                            url: "/ajax3",
+                            url: "/ajax-delete-trick",
                             type: "POST",
                             data: {slug: slug},
                             success: function () {

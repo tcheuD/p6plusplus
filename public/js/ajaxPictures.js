@@ -25,7 +25,7 @@ $(document).on('change', '.pic', function()
 
     }
     $.ajax({
-        url:'/ajax',
+        url:'/ajax-upload-picture',
         type: "POST",
         dataType: "json",
         data: data,
