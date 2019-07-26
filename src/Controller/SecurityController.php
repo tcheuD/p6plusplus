@@ -156,6 +156,7 @@ class SecurityController extends BaseController
                     $em->persist($user);
                     $em->flush();
                     $this->addFlash('success', 'Votre mot de passe a bien été modifié !');
+                    return $this->redirectToRoute('app_homepage');
                 }
             }
             return $this->render('security/resetPassword.html.twig', [

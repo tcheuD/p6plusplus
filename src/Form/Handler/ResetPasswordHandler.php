@@ -14,7 +14,7 @@ class ResetPasswordHandler
             /** @var User $user */
             $user->setPassword($passwordEncoder->encodePassword(
                 $user,
-                $form['plainPassword']->getData()
+                $form['plainPassword']['plainPassword']->getData()
             ));
             $user->setUserPassIdentity(null);
 

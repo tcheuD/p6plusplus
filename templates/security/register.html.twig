@@ -5,6 +5,9 @@
 {% block header_class %}<header id="header">{% endblock %}
 
 {% block body %}
+{% form_theme registrationForm
+        'registerFormTheme.html.twig'
+    %}
     <article id="main">
         <header class="special container">
             <h2>Inscription</h2>
@@ -14,6 +17,7 @@
 
     {{ form_start(registrationForm) }}
         {{ form_widget(registrationForm) }}
+        {{ form_label(registrationForm) }}
 
         <div id="registration_btn_div">
             <button type="submit">
@@ -24,16 +28,7 @@
        <a href="{{ path('app_login') }}"  class="link_login_on_registration_page">Déjà inscrit ?</a>
 
     {{ form_end(registrationForm) }}
-        {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
 
-            <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" name="_remember_me"> Remember me
-                </label>
-            </div>
-        #}
         </section>
         </article>
 {% endblock %}
