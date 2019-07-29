@@ -37,8 +37,8 @@ class EditTrickFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', TextType::class, [
-                'label' => 'Nom de la figure'
+            ->add('title', TrickTitleType::class, [
+                'data_class' => Trick::class,
             ])
 
             ->add('content', TextareaType::class, [

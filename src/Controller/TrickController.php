@@ -20,9 +20,6 @@ class TrickController extends BaseController
     public function showTrick($slug, $page, Request $request, EntityManagerInterface $em)
     {
 
-        //dd($request->server->get('HTTP_HOST'));
-
-
         $trick = $this->getDoctrine()
             ->getRepository(Trick::class)
             ->findBySlug($slug);
