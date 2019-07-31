@@ -34,7 +34,7 @@ class Trick
     private $content;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick", cascade={"persist", "remove"})
      */
     private $comments;
 
@@ -71,12 +71,12 @@ class Trick
     private $category;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Picture", inversedBy="tricks", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\Picture", inversedBy="tricks", cascade={"persist", "remove"})
      */
     private $pictures;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Video", inversedBy="tricks", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\Video", inversedBy="tricks", cascade={"persist", "remove"})
      */
     private $videos;
 

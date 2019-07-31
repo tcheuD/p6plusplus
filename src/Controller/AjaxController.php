@@ -93,25 +93,6 @@ class AjaxController extends BaseController
                 ->getRepository(Trick::class)
                 ->findBySlug($slug);
 
-
-            foreach ($trick->getVideos() as $video)
-            {
-                $trick->removeVideo($video);
-                $video->removeTrick($trick);
-            }
-
-            foreach ($trick->getPictures() as $picture)
-            {
-                $trick->removePicture($picture);
-                $picture->removeTrick($trick);
-            }
-
-            foreach ($trick->getComments() as $comment)
-            {
-                $trick->removeComment($comment);
-                $em->remove($comment);
-            }
-
             if ($trick) {
                 $em->persist($trick);
                 $em->remove($trick);
