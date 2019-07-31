@@ -11,6 +11,8 @@ class ResetPasswordHandler
 
     public function handle(FormInterface $form, $passwordEncoder, $user)
     {
+        if ($form->isSubmitted() && $form->isValid()) {
+
             /** @var User $user */
             $user->setPassword($passwordEncoder->encodePassword(
                 $user,
@@ -19,5 +21,8 @@ class ResetPasswordHandler
             $user->setUserPassIdentity(null);
 
             return $user;
+        }
+
+        return false;
     }
 }

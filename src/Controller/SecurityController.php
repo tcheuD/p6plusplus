@@ -8,7 +8,6 @@ use App\Form\Handler\ResetPasswordHandler;
 use App\Form\Handler\UserRegistrationHandler;
 use App\Form\ResetPasswordFormType;
 use App\Form\UserRegistrationFormType;
-use App\Repository\UserRepository;
 use App\Service\FileUploader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -86,16 +85,13 @@ class SecurityController extends BaseController
         $form = $this->createForm(ForgotPasswordFormType::class);
         $form->handleRequest($request);
 
-        $user = $this->getDoctrine()
-            ->getRepository(User::class)
-            ->findByMail($form['email']->getData());
+        $user = $this->getDoctrine()->getRepository(User::class)->findByMail($form['email']->getData());
 
         if ($user) {
             $bytes = random_bytes(10);
             $int = bin2hex($bytes);
 
-            $user->setUserPassIdentity($int);
-            $user->getEmail();
+            $user->setUserPassIdentity($int)->getEmail();
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
@@ -107,13 +103,8 @@ class SecurityController extends BaseController
                 ->setBody(
                     $this->renderView(
                         'mail.html.twig',
-                        [
-                            'name' => $name = 'lol',
-                            'pass' => $int]
-                    ),
-                    'text/html'
-                )
-                ;
+                        ['pass' => $int]),
+                    'text/html');
 
             $mailer->send($message);
 
@@ -145,8 +136,6 @@ class SecurityController extends BaseController
             $form = $this->createForm(ResetPasswordFormType::class);
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-
                 $resetPasswordHandler = new ResetPasswordHandler();
 
                 $user = $resetPasswordHandler->handle($form, $passwordEncoder, $user);
@@ -158,7 +147,6 @@ class SecurityController extends BaseController
                     $this->addFlash('success', 'Votre mot de passe a bien été modifié !');
                     return $this->redirectToRoute('app_homepage');
                 }
-            }
             return $this->render('security/resetPassword.html.twig', [
                 'resetPasswordForm' => $form->createView(),
                 ''
