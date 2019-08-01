@@ -33,7 +33,7 @@ class TrickFixtures extends BaseFixture implements DependentFixtureInterface
                 ->setCreatedBy($this->getRandomReference('user'))
                 ->setContent($this->faker->realText())
                 ->setSlug(strtolower(str_replace(' ', '-', $title)))
-                ->setMainPicture('1.jpg');
+                ->setMainPicture('images/1.jpg');
 
             return $trick;
         });

@@ -37,8 +37,8 @@ class EditTrickFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', TextType::class, [
-                'label' => 'Nom de la figure'
+            ->add('title', TrickTitleType::class, [
+                'data_class' => Trick::class,
             ])
 
             ->add('content', TextareaType::class, [
@@ -55,13 +55,6 @@ class EditTrickFormType extends AbstractType
                 'choice_label' => function(Picture $picture) {
                     return sprintf($picture->getUrl());
                 },
-              //  'choice_attr' => function(Picture $picture) {
-                //    return ['class' => sprintf($picture->getUrl())];
-//return ['data-img-src' => sprintf($picture->getUrl())];
-                //},
-//'choice_attr' => function(Picture $picture) {
-//    return ['data-img-src' => sprintf($picture->getUrl())];
-//},
                 'choice_attr' => function(Picture $picture) {
                     return [
                         'data-img-src' => '/images/'.sprintf($picture->getUrl()),
@@ -69,7 +62,6 @@ class EditTrickFormType extends AbstractType
                 },
                 'choices' => $options['data']->getPictures(),
                 'attr' => ['class' => 'save'],
-                //'mapped' => false
             ])
 
             ->add('videos', CollectionType::class, [
@@ -81,7 +73,6 @@ class EditTrickFormType extends AbstractType
                 'allow_delete'  => true,
                 'by_reference'  => true,
                 'label' => 'Videos',
-//'mapped' => false,
                 'attr'          => [
                     'class' => 'collection-videos',
                 ],
@@ -95,7 +86,6 @@ class EditTrickFormType extends AbstractType
                 'allow_add'     => true,
                 'allow_delete'  => true,
                 'by_reference'  => true,
-//'mapped' => false,
                 'attr'          => [
                     'class' => 'collection-pictures',
                 ],

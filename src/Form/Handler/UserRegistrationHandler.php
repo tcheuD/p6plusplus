@@ -26,7 +26,7 @@ class UserRegistrationHandler
             }
             $user->setPassword($passwordEncoder->encodePassword(
                 $user,
-                $form['plainPassword']->getData()
+                $form['plainPassword']['plainPassword']->getData()
             ));
 
             return true;

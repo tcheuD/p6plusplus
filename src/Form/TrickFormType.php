@@ -32,8 +32,8 @@ class TrickFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', TextType::class, [
-                'label' => 'Nom de la figure'
+            ->add('title', TrickTitleType::class, [
+                'data_class' => Trick::class,
             ])
 
             ->add('content', TextareaType::class, [
@@ -44,7 +44,6 @@ class TrickFormType extends AbstractType
                 'label' => 'Image principale',
                 'choices' => null,
                 'attr' => ['class' => 'save'],
-                //'mapped' => false
             ])
 
             ->add('category', EntityType::class, [
@@ -75,7 +74,6 @@ class TrickFormType extends AbstractType
                 'allow_delete'  => true,
                 'by_reference'  => true,
                 'label' => 'Images',
-                //'mapped' => false,
                 'attr'          => [
                     'class' => 'collection-pictures',
                 ],
@@ -86,7 +84,6 @@ class TrickFormType extends AbstractType
                 function (FormEvent $event) {
                     /** @var Trick|null $data **/
                     $data = $event->getData();
-                    dump($data);
                     if (!isset($data['pictures'])) {
                         return;
                     }
@@ -96,29 +93,10 @@ class TrickFormType extends AbstractType
                     );
                 }
             )
-             /**
-             * ->addEventListener(
-            FormEvents::PRE_SUBMIT,
-            function (FormEvent $event) {
-            /** @var Trick|null $data **
-        $data = $event->getData();
-        dump($data);
-        if (!$data) {
-            return;
-        }
-        $this->setupSpecificLocationNameField(
-            $event->getForm(),
-            $data->getPictures()
-        );
-    }
-);
-             *
-             *
-             */ ->get('mainPicture')->addEventListener(
+              ->get('mainPicture')->addEventListener(
                 FormEvents::PRE_SUBMIT, //presubmit
                 function(FormEvent $event) {
                     $form = $event->getForm();
-                    dump($event->getData());
                     $this->setupSpecificLocationNameField(
                         $form->getParent(),
                         $event->getData()
@@ -135,7 +113,6 @@ class TrickFormType extends AbstractType
             return;
         }
 
-        dump(array_keys($picture));
 
         $picture = array_keys($picture);
 
@@ -143,7 +120,6 @@ class TrickFormType extends AbstractType
             'label' => 'Image principale',
             'choices' => $picture,
             'attr' => ['class' => 'save image-picker'],
-            //'mapped' => false
         ]);
     }
 

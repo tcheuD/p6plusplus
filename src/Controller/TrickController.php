@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Trick;
+use App\Factory\PictureFactory;
 use App\Form\CommentType;
 use App\Form\Handler\AddCommentHandler;
+use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,6 +21,8 @@ class TrickController extends BaseController
      */
     public function showTrick($slug, $page, Request $request, EntityManagerInterface $em)
     {
+        $pagination = new Pagination();
+
         $trick = $this->getDoctrine()
             ->getRepository(Trick::class)
             ->findBySlug($slug);
@@ -29,13 +33,6 @@ class TrickController extends BaseController
         $comments = $this->getDoctrine()
             ->getRepository(Comment::class)
             ->findByTrickAndPaginate($trick, $page, 5 );
-
-        $pagination = array(
-            'page' => $page,
-            'nbPages' => ceil(count($comments) / 5),
-            'nomRoute' => 'show_trick',
-            'paramsRoute' => array()
-        );
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -54,7 +51,7 @@ class TrickController extends BaseController
             'trick' => $trick,
             'commentForm' => $form->createView(),
             'comments' => $comments,
-            'pagination' => $pagination
+            'pagination' =>  $pagination->paginateComments($page, $comments)
 
         ]);
     }
@@ -81,42 +78,4 @@ class TrickController extends BaseController
         ]);
     }
 
-    /**
-     * @Route("/ajax2", name="app_ajax2")
-     */
-    public function ajax(Request $request)
-    {
-
-        if ($request->isXmlHttpRequest()){
-
-            $lol = $request->request->get('row');
-            intval($lol);
-
-            $tricks = $this->getDoctrine()
-                ->getRepository(Trick::class)
-                ->findAllAndPaginate(2, 15 );
-
-
-            $c = count($tricks);
-            foreach ($tricks as $post) {
-                dump($post);
-            }
-
-            $jsonData = array();
-            $idx = 0;
-            /** @var  $trick Trick */
-            foreach($tricks as $trick) {
-                $temp = array(
-                    'title' => $trick->getTitle(),
-                    'mainPicture' => $trick->getMainPicture(),
-                    'slug' => $trick->getSlug(),
-                );
-                $jsonData[$idx++] = $temp;
-            }
-
-                return new JsonResponse($jsonData);
-        }
-
-        return new JsonResponse("This is not an ajax request");
-    }
 }

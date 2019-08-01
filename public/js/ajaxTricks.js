@@ -12,7 +12,7 @@ $(document).ready(function(){
             $("#row").val(row);
 
             $.ajax({
-                url: "/ajax2",
+                url: "/load-more-tricks",
                 type: "POST",
                 data: {row: row},
                 beforeSend: function () {
