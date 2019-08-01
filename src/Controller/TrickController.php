@@ -19,8 +19,9 @@ class TrickController extends BaseController
     /**
      * @Route("/trick/{slug}/{page}", requirements={"page" = "\d+"}, name="show_trick")
      */
-    public function showTrick($slug, $page, Request $request, EntityManagerInterface $em, Pagination $pagination)
+    public function showTrick($slug, $page, Request $request, EntityManagerInterface $em)
     {
+        $pagination = new Pagination();
 
         $trick = $this->getDoctrine()
             ->getRepository(Trick::class)
