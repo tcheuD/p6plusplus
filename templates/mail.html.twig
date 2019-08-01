@@ -1,3 +1,2 @@
 <h3>Cliquez sur le lien ci dessous pour réinitialiser votre mot de passe:</h3>
-
-<a href="{{ path('app_reset_password', {pass: pass}) }}">{{ path('app_reset_password', {pass: pass}) }}</a>.
+<a href="{{ absolute_url(path('app_reset_password', {pass: pass})) }}">{{ absolute_url(path('app_reset_password', {pass: pass})) }}</a>.

@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Trick;
+use App\Factory\PictureFactory;
 use App\Form\CommentType;
 use App\Form\Handler\AddCommentHandler;
+use App\Service\Pagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -17,7 +19,7 @@ class TrickController extends BaseController
     /**
      * @Route("/trick/{slug}/{page}", requirements={"page" = "\d+"}, name="show_trick")
      */
-    public function showTrick($slug, $page, Request $request, EntityManagerInterface $em)
+    public function showTrick($slug, $page, Request $request, EntityManagerInterface $em, Pagination $pagination)
     {
 
         $trick = $this->getDoctrine()
@@ -30,13 +32,6 @@ class TrickController extends BaseController
         $comments = $this->getDoctrine()
             ->getRepository(Comment::class)
             ->findByTrickAndPaginate($trick, $page, 5 );
-
-        $pagination = array(
-            'page' => $page,
-            'nbPages' => ceil(count($comments) / 5),
-            'nomRoute' => 'show_trick',
-            'paramsRoute' => array()
-        );
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -55,7 +50,7 @@ class TrickController extends BaseController
             'trick' => $trick,
             'commentForm' => $form->createView(),
             'comments' => $comments,
-            'pagination' => $pagination
+            'pagination' =>  $pagination->paginateComments($page, $comments)
 
         ]);
     }
