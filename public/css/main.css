@@ -1950,6 +1950,15 @@ input, select, textarea {
 					background: #df7b77;
 				}
 
+			.icon.circle.fa-linkedin {
+				background: #3fb1a3;
+				color: #fff;
+			}
+
+			    .icon.circle.fa-linkedin:hover {
+					background: #52b8ac;
+				}
+
 			.icon.circle.fa-github {
 				background: #dcad8b;
 				color: #fff;
@@ -3518,6 +3527,10 @@ input, select, textarea {
 	color: black;
 }
 
+#main {
+	margin-bottom: 0;
+}
+
 #comment_comment {
 	width: 466px;
 	height: 65px;
@@ -3638,6 +3651,10 @@ input, select, textarea {
 
 .no_list_li {
 	list-style-type: none;
+}
+
+#code-climate-analysis {
+	border-bottom: 0;
 }
 
 @media screen and (max-width: 840px) {

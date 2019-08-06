@@ -7,6 +7,7 @@
             <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
             <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+            <link rel="icon" href="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/198/snowboarder_1f3c2.png">
         {% endblock %}
     </head>
     {% block body_class %}
@@ -22,12 +23,13 @@
             <h1 id="logo"><a href="{{ path('app_homepage') }}">SnowTricks</a></h1>
             <nav id="nav">
                 <ul>
-                    <li class="current"><a href="{{ path('app_homepage') }}">Tricks</a></li>
+                    <li class="current"><a href="{{ path('app_homepage') }}#main">Tricks</a></li>
                     {% if is_granted('ROLE_USER') %}
-                    <li><a href="{{ path('app_logout') }}" >Disconnect</a></li>
+                    <li><a href="{{ path('app_logout') }}" >Déconnexion</a></li>
                     {% else %}
-                    <li><a href="{{ path('app_register') }}" >Sign Up</a></li>
-                    <li><a href="{{ path('app_login') }}" >Login</a></li>
+                    <li><a href="{{ path('app_register') }}" >Inscription</a></li>
+                    <li><a href="{{ path('app_login') }}" >Connexion</a></li>
+
                     {% endif %}
                 </ul>
             </nav>
@@ -35,6 +37,30 @@
 
 
         {% block body %}{% endblock %}
+            <footer id="footer">
+                <ul class="icons">
+                    <li>
+                        <a class="icon brands circle fa-twitter" href="https://twitter.com/tcheuD">
+                            <span class="label">Twitter</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="icon brands circle fa-github" href="https://github.com/tcheuD">
+                            <span class="label">Github</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="icon brands circle fa-linkedin" href="https://www.linkedin.com/in/damienchedan/">
+                            <span class="label">Linkedin</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <a id="code-climate-analysis" href="https://codeclimate.com/github/tcheuD/p6/maintainability">
+                    <img src="https://api.codeclimate.com/v1/badges/9fa126d185c0ed0238fc/maintainability" />
+                </a>
+
+            </footer>
         </div>
         {% block javascripts %}
             <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
