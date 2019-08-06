@@ -23,4 +23,3 @@ web/js/jquery.collection.js
 /public/uploads
 /config/packages/dev/swiftmailer.yaml
 .env.local.php
-config/packages/swiftmailer.yaml
