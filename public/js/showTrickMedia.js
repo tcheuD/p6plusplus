@@ -32,9 +32,6 @@ onResize = function () {
         $(".showTrickMediaContainer").hide();
     }
 
-
-    console.log(width);
-
 };
 
 showMedia= function () {
