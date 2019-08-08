@@ -52,6 +52,6 @@ showMedia= function () {
 };
 
 $(document).ready(onResize);
-$(window).resize(onResize);
-
 $(document).ready(showMedia);
+$(window).resize(onResize);
+$(window).resize(showMedia);
