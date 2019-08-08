@@ -15,20 +15,6 @@ class UserFixture extends BaseFixture
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    private static $picture = [
-        '1.jpg',
-        '2.jpg',
-        '3.jpg',
-        '4.jpg',
-        '5.jpg',
-        '6.jpg',
-        '7.jpg',
-        '8.jpg',
-        '9.jpg',
-        '10.jpg',
-        '11.jpg',
-    ];
-
     public function loadData(ObjectManager $manager)
     {
         $this->createMany(10, 'user', function ($i) {
@@ -41,7 +27,7 @@ class UserFixture extends BaseFixture
            ));
            $user->setName($this->faker->name());
            $user->setRegistrationDate($this->faker->dateTimeBetween('-100 days', '-1 days'));
-           $user->setPicture($this->faker->randomElement(self::$picture));
+           $user->setPicture('default_pp_snowtricks.png');
 
            return $user;
         });

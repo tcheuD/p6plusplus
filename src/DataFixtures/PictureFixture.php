@@ -45,5 +45,4 @@ class PictureFixture extends BaseFixture implements DependentFixtureInterface
             UserFixture::class,
         ];
     }
-
 }

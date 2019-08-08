@@ -8,59 +8,79 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class VideoFixture extends BaseFixture implements DependentFixtureInterface
 {
-    private static $url = [
-        'https://youtu.be/TFVWhh0Gars',
-        'https://youtu.be/xyPeVKGv58w',
-        'https://youtu.be/XyARvRQhGgk',
-        'https://youtu.be/-p_Nu4AHM6Q',
-        'https://youtu.be/cYGI1Q7O_a0',
-        'https://youtu.be/UU9iKINvlyU',
-        'https://youtu.be/6zALCB6WJBI',
-        'https://youtu.be/TTgeY_XCvkQ',
-        'https://youtu.be/SQyTWk7OxSI',
-        'https://youtu.be/rB9lOfv0oPQ',
-        'https://youtu.be/74UEgGrawKA',
-        'https://youtu.be/K-apShaeSgY',
-        'https://youtu.be/Xs-JfPjgiA4',
-        'https://youtu.be/de50trNEvf8',
-        'https://youtu.be/WNW90gFK9Cs',
-        'https://youtu.be/0AbiygSo478',
-        'https://www.youtube.com/watch?v=n0F6hSpxaFc',
-        'https://youtu.be/UGdif-dwu-8',
-        'https://youtu.be/FNyCrnsMlDE',
-        'https://youtu.be/AI1m8NF7sp4',
-        'https://youtu.be/1z4LMq8d7DI',
-        'https://youtu.be/LRfk90XHqyY',
-        'https://youtu.be/SDP6eGGYqYA',
-        'https://youtu.be/RY8CBQZEZ34',
-        'https://youtu.be/Vdz2TPtCmAk',
-        'https://youtu.be/3_fr5l-JvTM',
-        'https://youtu.be/JYz3tc5NuGY',
-        'https://youtu.be/OvZdr4XM_UE',
-        'https://youtu.be/SDdfIqJLrq4',
-        'https://youtu.be/eEQ9Tq0RRIg',
-        'https://youtu.be/JxOaXPwwWwo',
+    private static $urls = [
+        'Big Air' => [
+            'https://www.youtube.com/watch?v=KdZ7mOMHdD0',
+            'https://www.youtube.com/watch?v=zfRShgrtig4',
+            'https://www.youtube.com/watch?v=RUErt8l7zOY',
+            'https://www.youtube.com/watch?v=VEQ-s679a10',
+            ],
+        'Ollie' => [
+            '1https://www.youtube.com/watch?v=kOyCsY4rBH0',
+            'https://www.youtube.com/watch?v=SXFQCgw-V_k',
+            ],
+        'Nollie' => [
+            'https://www.youtube.com/watch?v=Ki1WSzpJyz0',
+            'https://www.youtube.com/watch?v=xyPeVKGv58w',
+            'https://www.youtube.com/watch?v=H_tSuAipjWc',
+            ],
+        'Switch ollie' => [
+            'https://www.youtube.com/watch?v=yRCUEfLEvZs',
+            ],
+        'One-Two' => [
+            'https://www.youtube.com/watch?v=HFjXm2Mn3eQ',
+            ],
+        'A B' => [
+            'https://www.youtube.com/watch?v=_utmUjLD7DE',
+            ],
+        'Bloody Dracula' => [
+            'https://www.youtube.com/watch?v=UU9iKINvlyU',
+            'https://www.youtube.com/watch?v=v7AmF8c4ZLw',
+            'https://www.youtube.com/watch?v=0J8QMsL9DC4',
+            'https://www.youtube.com/watch?v=t_bqZDLLL_c',
+            ],
+        'Canadian Bacon' => [
+            'https://www.youtube.com/watch?v=6zALCB6WJBI',
+            'https://www.youtube.com/watch?v=IVUSdEBRZ0Q',
+            ],
+        'Chicken Salad' => [
+            'https://www.youtube.com/watch?v=TTgeY_XCvkQ',
+            'https://www.youtube.com/watch?v=9rIWDl8QcUY',
+            ],
+        'China air' => [
+            'https://www.youtube.com/watch?v=cvt0mRTzfx0',
+            ],
+        'Crail' => [
+            'https://www.youtube.com/watch?v=eTx2uVcbLzM',
+            'https://www.youtube.com/watch?v=cbfWyGOvkJk',
+            'https://www.youtube.com/watch?v=rB9lOfv0oPQ',
+            ],
+        'Cross-rocket' => [
+            'https://www.youtube.com/watch?v=74UEgGrawKA',
+            'https://www.youtube.com/watch?v=iFUOt4QYpZs',
+            ],
     ];
 
     public function loadData(ObjectManager $manager)
     {
-        $this->createMany(30, 'video', function ($i) {
-            $videoUrl = self::$url[$i];
+        $i= -1;
+        foreach (self::$urls as $key => $value) {
+            $i++;
+            foreach ($value as $url) {
+                preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match);
 
-            preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $videoUrl, $match);
+                $video = new Video();
+                $video->addTrick($this->getReference('trick_'.$i));
+                $video->setCreationDate($this->faker->dateTimeBetween('-100 days', '-1 days'));
+                $video->setAuthor($this->getRandomReference('user'));
+                $video->setNumber(1);
+                $video->setUrl($url);
+                $video->setIdentif($match[1]);
+                $video->setPlatform('youtube');
 
-
-            $video = new Video();
-            $video->addTrick($this->getRandomReference('trick'));
-            $video->setCreationDate($this->faker->dateTimeBetween('-100 days', '-1 days'));
-            $video->setAuthor($this->getRandomReference('user'));
-            $video->setNumber(1);
-            $video->setUrl($videoUrl);
-            $video->setIdentif($match[1]);
-            $video->setPlatform('youtube');
-
-            return $video;
-        });
+                $manager->persist($video);
+            }
+        }
 
         $manager->flush();
     }
@@ -72,5 +92,4 @@ class VideoFixture extends BaseFixture implements DependentFixtureInterface
             UserFixture::class,
         ];
     }
-
 }
