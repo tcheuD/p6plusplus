@@ -36,7 +36,7 @@
 
             </div>
 
-                            {{ trick.content }}
+                            {{ trick.content|nl2br }}
             <div class="trick-infos">
                 <span class="label category">Categorie : {{ trick.category }}</span> <span class="label creation_date">créé le : {{ trick.creationDate|date('d-m-Y') }}</span> <span class="label author">par : {{ trick.createdBy.firstname }} {{ trick.createdBy.name }}</span>
                 {% if trick.modificationDate is not null %}
@@ -76,7 +76,7 @@
     <div class="circular--landscape">
     <img src="{{ asset(comment.user.picturePath) }}" alt="">
     </div>
-    <b class="comment_content">{{ comment.comment }}</b>
+    <b class="comment_content">{{ comment.comment|nl2br }}</b>
     {{ comment.user.firstname }} {{ comment.user.name }} le {{ comment.commentDate|date('Y-m-d') }}
     </div>
 {% endfor %}
