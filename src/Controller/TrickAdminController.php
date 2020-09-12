@@ -13,9 +13,12 @@ use App\Repository\PictureRepository;
 use App\Repository\TrickRepository;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -27,10 +30,7 @@ class TrickAdminController extends BaseController
 {
     /**
      * @Route("/trick/new", name="trick_admin")
-     * @param EntityManagerInterface $em
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @throws \Exception
+     * @return RedirectResponse|Response
      */
     public function new(EntityManagerInterface $em, Request $request, FileUploader $fileUploader)
     {
