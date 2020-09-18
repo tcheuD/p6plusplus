@@ -24,3 +24,6 @@ web/js/jquery.collection.js
 /config/packages/dev/swiftmailer.yaml
 .env.local.php
 /docker/database/data/
+/coverage/
+/.php-version
+/composer.lock
