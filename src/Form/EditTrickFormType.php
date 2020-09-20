@@ -6,14 +6,12 @@ use App\Entity\Picture;
 use App\Entity\Trick;
 use App\Repository\PictureRepository;
 use App\Repository\TrickRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -108,7 +106,6 @@ class EditTrickFormType extends AbstractType
             ->get('mainPicture')->addEventListener(
                 FormEvents::POST_SUBMIT,
                 function(FormEvent $event) {
-                    dd($event);
                     $form = $event->getForm();
                     $this->setupSpecificLocationNameField(
                         $form->getParent(),
