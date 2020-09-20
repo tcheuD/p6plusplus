@@ -27,3 +27,4 @@ web/js/jquery.collection.js
 /coverage/
 /.php-version
 /composer.lock
+/.idea/
