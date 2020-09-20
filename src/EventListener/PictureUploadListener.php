@@ -11,7 +11,6 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-//TODO: current status: handle only uploads from Picture entity, need to handle Tick's main pic as wel
 class PictureUploadListener
 {
     private $uploader;

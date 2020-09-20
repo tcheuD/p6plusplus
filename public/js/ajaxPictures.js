@@ -89,5 +89,4 @@ $('#trick_form_mainPicture').on('change', function(){
 $(document).on('change', '.input-pic-new', function()
 {
     $(this).hide();
-    //TODO: add edit icon
 });

@@ -117,8 +117,6 @@ class TrickAdminController extends BaseController
      */
     public function addPicture(EntityManagerInterface $em, Request $request, FileUploader $fileUploader)
     {
-        //TODO: HandlePictureForm
-
         $form = $this->createForm(AddPictureFormType::class);
 
         $form->handleRequest($request);
