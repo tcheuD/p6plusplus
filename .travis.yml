@@ -7,6 +7,7 @@ php:
 script:
   - COMPOSER_MEMORY_LIMIT=-1 composer install
   - ./bin/console doctrine:database:create --env=test
+  - ./bin/console make:migration
   - ./bin/console doctrine:migrations:migrate -n --env=test
   - ./bin/console doctrine:fixtures:load -n --env=test
   - ./vendor/bin/simple-phpunit
