@@ -11,7 +11,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class ImageTypeExtension extends AbstractTypeExtension
 {
-    public static function getExtendedTypes()
+    public static function getExtendedTypes(): iterable
     {
         return [FileType::class];
     }
