@@ -9,7 +9,7 @@ use App\Entity\Trick;
 use App\Entity\User;
 use App\Entity\Video;
 use DateTime;
-use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class TrickTest extends TestCase
 {
